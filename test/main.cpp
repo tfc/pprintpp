@@ -1,5 +1,6 @@
 #include <cassert>
 #include <cstring>
+#include <cstdio>
 #include <pprintpp.hpp>
 
 #define TEST(correct_str, ...) \
