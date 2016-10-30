@@ -76,14 +76,14 @@ template <class InList, class OutList, size_t N>
 struct find_brace<tl<char_t<'}'>, InList>, OutList, N>
     : public find_brace<InList, append_t<OutList, char_t<'}'>>, N - 1>
 {};
-template <class InList, class OutList, size_t N>
-struct find_brace<tl<char_t<'{'>, InList>, OutList, N>
-    : public find_brace<InList, append_t<OutList, char_t<'{'>>, N + 1>
-{};
+
 template <char C, class InList, class OutList, size_t N>
 struct find_brace<tl<char_t<C>, InList>, OutList, N>
     : public find_brace<InList, append_t<OutList, char_t<C>>, N>
-{};
+{
+    static_assert(C != '{', "Found nested braces: {...{...}...}!"
+                            " Maybe you want to mask the outer one?");
+};
 
 template<typename SL, typename TL>
 struct autoformat;
