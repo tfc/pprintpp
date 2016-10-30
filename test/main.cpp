@@ -32,10 +32,17 @@ int main()
     TEST("%lu",  "{}", 123ul);
     TEST("%llu", "{}", 123ull);
 
+    TEST("%x",   "{x}", 123u);
+    TEST("%lx",  "{x}", 123ul);
+    TEST("%llx", "{x}", 123ull);
+
     TEST("%f",  "{}", 1.0f);
     TEST("%lf", "{}", 1.0);
 
     pprintf("Green, green, green! All tests passed.\n");
+
+    pprintf("{s} {} {1} {} {} {} {} {} {} {} {} {} {} {} {} {}\n",
+            "1",2u,3.0,4.0f,5ull,'6',7ul,8,9,10,11,12,13,14,15,16);
 
     return 0;
 }

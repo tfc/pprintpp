@@ -53,14 +53,25 @@ template <typename T> struct type2fmt<T*>   { using type = char_tl_t<'p'>; };
 
 template <typename T, typename FL>
 struct format_str {
+    using raw_T = typename std::remove_cv<T>::type;
     static constexpr bool s_fmt {contains<FL, char_t<'s'>>::value};
     static constexpr bool is_str {std::is_same<char,
-        typename std::remove_cv<typename std::remove_pointer<T>::type>::type>::value};
+        typename std::remove_cv<
+            typename std::remove_pointer<raw_T>::type>::type>::value};
+
+    static constexpr bool is_uint {std::is_unsigned<raw_T>::value};
+    static constexpr bool has_x   {contains<FL, char_t<'x'>>::value};
 
     using raw_fmt = typename type2fmt<T>::type;
+
+    using uint_x_fmt = typename std::conditional<is_uint && has_x,
+          substitute_t<raw_fmt, char_t<'u'>, char_t<'x'>>,
+          raw_fmt
+        >::type;
+
     using type = typename std::conditional<s_fmt && is_str,
           substitute_t<raw_fmt, char_t<'p'>, char_t<'s'>>,
-          raw_fmt
+          uint_x_fmt
         >::type;
 };
 
