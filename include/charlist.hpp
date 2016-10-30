@@ -77,6 +77,10 @@ struct tl_to_varlist<typelist::tl<char_t<c>, restlist>, chars...>
     : public tl_to_varlist<restlist, chars..., c>
 { };
 
+template <>
+struct tl_to_varlist<typelist::null_t> {
+    static const char * const str() { return ""; }
+};
 template <char ... chars>
 struct tl_to_varlist<typelist::null_t, chars...> {
     using list = char_tl<chars...>;
