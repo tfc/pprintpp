@@ -9,8 +9,9 @@ int main()
 {
     TEST("", "");
 
-    TEST(" { ", " \{ ");
-    TEST("{}", "\{}");
+    TEST(" { ", " \\{ ");
+    TEST("{}", "\\{}");
+    TEST(" { %d } ", " \\{ {} } ", 123);
 
     TEST("%p", "{}", nullptr);
     TEST("%p", "{}", reinterpret_cast<void*>(0));

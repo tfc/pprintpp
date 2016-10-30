@@ -72,10 +72,6 @@ struct find_brace<tl<char_t<'}'>, InList>, OutList, 1> {
     using before = OutList;
     using after  = InList;
 };
-template <class InList, class OutList, size_t N>
-struct find_brace<tl<char_t<'}'>, InList>, OutList, N>
-    : public find_brace<InList, append_t<OutList, char_t<'}'>>, N - 1>
-{};
 
 template <char C, class InList, class OutList, size_t N>
 struct find_brace<tl<char_t<C>, InList>, OutList, N>
@@ -85,40 +81,49 @@ struct find_brace<tl<char_t<C>, InList>, OutList, N>
                             " Maybe you want to mask the outer one?");
 };
 
-template<typename SL, typename TL>
-struct autoformat;
-
-template<typename TL>
-struct autoformat<null_t, TL> {
-    using type = null_t;
+template <class OutList, size_t N>
+struct find_brace<null_t, OutList, N>
+{
+    static_assert(N + 1 == N, "foooo");
 };
 
-template<typename SL, typename T, typename TL>
-struct autoformat<tl<char_t<'\\'>, tl<char_t<'{'>, SL>>, tl<T, TL>>
+template <typename SL, typename TL>
+struct autoformat;
+
+template <>
+struct autoformat<null_t, null_t> { using type = null_t; };
+
+template <typename TL>
+struct autoformat<null_t, TL> { using type = null_t; };
+
+template <typename SL, typename TL>
+struct autoformat<tl<char_t<'\\'>, tl<char_t<'{'>, SL>>, TL>
 {
     using type = tl<char_t<'{'>, typename autoformat<SL, TL>::type>;
 };
 
-template<typename SL, typename T, typename TL>
-struct autoformat<tl<char_t<'{'>, SL>, tl<T, TL>>
+template <typename SL, typename TL>
+struct autoformat<tl<char_t<'{'>, SL>, TL>
 {
     using other_brace  = find_brace<SL, null_t, 1>;
     using format_block = typename other_brace::before;
     using rest_str     = typename other_brace::after;
 
+    static_assert(!std::is_same<TL, null_t>::value, "fooooo");
+    using T = typename TL::head;
     using fmt_str = typename format_str<T, format_block>::type;
 
     using type = tl<char_t<'%'>,
-                    append_t<fmt_str, typename autoformat<rest_str, TL>::type>>;
+                    append_t<fmt_str, typename autoformat<rest_str, typename TL::tail>::type>>;
 };
 
-template<typename C, typename SL, typename TL>
+template <typename C, typename SL, typename TL>
 struct autoformat<tl<C, SL>, TL> {
     using type = tl<C, typename autoformat<SL, TL>::type>;
 };
 
 
-template<typename StringProvider, typename PtList>
+template <typename StringProvider, typename PtList>
 using autoformat_t =
     tl_to_varlist<
         typename autoformat<string_list_t<StringProvider>, PtList>::type
