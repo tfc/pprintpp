@@ -5,8 +5,29 @@
 
 The acronym stands for "Python style print for C plus plus".
 
-`pprintpp` is a header-only C++ library, which aims to make `printf` use safe and easy.
+`pprintpp` is a **header-only** C++ library, which aims to make `printf` use safe and easy.
 It is a *pure compile time library*, and will add **no overhead** to the runtime of your programs.
+
+
+## Dependencies
+
+The library does only depend on **C++11** (or higher) and the **STL** (`<tuple>` and `<type_traits>`).
+
+The STL dependency can easily get rid of by reimplementing some type traits. This way `pprintpp` can be used in hardcore baremetal environments (where it already has been in use actually).
+
+## Printf Compatibility
+
+`pprintpp` will transform a tuple `(format_str, [type list])` to `printf_compatible_format_string`.
+
+That means, that it can be used with any `printf`-like function. You just need to define a macro, like for example these ones for `printf` and `snprintf`:
+
+``` c++
+#define pprintf(fmtstr, ...) printf(AUTOFORMAT(fmtstr, ## __VA_ARGS), ## __VA_ARGS__)
+#define psnprintf(outbuf, len, fmtstr, ...) \
+    snprintf(outbuf, len, AUTOFORMAT(fmtstr, ## __VA_ARGS__), ## __VA_ARGS__)
+```
+
+Embedded projects, which introduce their own logging/tracing functions, which accept `printf`-style format string, will also profit from this library.
 
 ## Example
 
@@ -62,4 +83,3 @@ Contents of section .rodata:
  400610 25642068 656c6c6f 20257321 2025640a  %d hello %s! %d.
  400620 00                                   .
 ```
-
