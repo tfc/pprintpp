@@ -6,3 +6,5 @@ default: pprintpp_test
 pprintpp_test: main.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
+clean:
+	rm -rf pprintpp_test

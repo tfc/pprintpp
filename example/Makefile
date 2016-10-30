@@ -6,3 +6,6 @@ default: example
 example: main.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
+clean:
+	rm -rf example
+
