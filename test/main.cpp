@@ -39,6 +39,8 @@ int main()
     TEST("%f",  "{}", 1.0f);
     TEST("%lf", "{}", 1.0);
 
+    TEST("%10d", "{10}", 123);
+
     pprintf("Green, green, green! All tests passed.\n");
 
     pprintf("{s} {} {1} {} {} {} {} {} {} {} {} {} {} {} {} {}\n",

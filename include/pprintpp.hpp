@@ -69,10 +69,14 @@ struct format_str {
           raw_fmt
         >::type;
 
-    using type = typename std::conditional<s_fmt && is_str,
+    using fmt_type = typename std::conditional<s_fmt && is_str,
           substitute_t<raw_fmt, char_t<'p'>, char_t<'s'>>,
           uint_x_fmt
         >::type;
+
+    using filtered_fl = remove_t<remove_t<FL, char_t<'x'>>, char_t<'s'>>;
+
+    using type = append_t<filtered_fl, fmt_type>;
 };
 
 template <class InList, class OutList, size_t Counter>
