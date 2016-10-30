@@ -1,6 +1,7 @@
 # Python style printf for C++
 
-----
+[![Build Status](https://travis-ci.org/tfc/pprintpp.svg?branch=master)](https://travis-ci.org/tfc/pprintpp) (GCC and Clang)
+
 ## What is `pprintpp`?
 
 The acronym stands for "Python style print for C plus plus".
