@@ -24,6 +24,7 @@
 #pragma once
 
 #include <tuple>
+#include <type_traits>
 #include "charlist.hpp"
 
 namespace pprintpp {
@@ -31,14 +32,37 @@ namespace pprintpp {
 using namespace typelist;
 using namespace charlist;
 
+template <typename T> struct type2fmt;
 
-template <typename T> struct format_for;
+template <> struct type2fmt<char>                { using type = char_tl_t<'c'>; };
+template <> struct type2fmt<short>               { using type = char_tl_t<'d'>; };
+template <> struct type2fmt<int>                 { using type = char_tl_t<'d'>; };
+template <> struct type2fmt<long int>            { using type = char_tl_t<'l', 'd'>; };
+template <> struct type2fmt<long long int>       { using type = char_tl_t<'l', 'l', 'd'>; };
+template <> struct type2fmt<unsigned char>       { using type = char_tl_t<'u'>; };
+template <> struct type2fmt<unsigned short>      { using type = char_tl_t<'u'>; };
+template <> struct type2fmt<unsigned>            { using type = char_tl_t<'u'>; };
+template <> struct type2fmt<unsigned long>       { using type = char_tl_t<'l', 'u'>; };
+template <> struct type2fmt<unsigned long long>  { using type = char_tl_t<'l', 'l', 'u'>; };
 
-template <> struct format_for<char>  { using type = char_tl_t<'c'>; };
-template <> struct format_for<int>   { using type = char_tl_t<'d'>; };
-template <> struct format_for<float> { using type = char_tl_t<'f'>; };
-template <> struct format_for<double> { using type = char_tl_t<'l', 'f'>; };
-template <> struct format_for<const char*> { using type = char_tl_t<'s'>; };
+template <> struct type2fmt<float>  { using type = char_tl_t<'f'>; };
+template <> struct type2fmt<double> { using type = char_tl_t<'l', 'f'>; };
+
+template <> struct type2fmt<std::nullptr_t> { using type = char_tl_t<'p'>; };
+template <typename T> struct type2fmt<T*>   { using type = char_tl_t<'p'>; };
+
+template <typename T, typename FL>
+struct format_str {
+    static constexpr bool s_fmt {contains<FL, char_t<'s'>>::value};
+    static constexpr bool is_str {std::is_same<char,
+        typename std::remove_cv<typename std::remove_pointer<T>::type>::type>::value};
+
+    using raw_fmt = typename type2fmt<T>::type;
+    using type = typename std::conditional<s_fmt && is_str,
+          substitute_t<raw_fmt, char_t<'p'>, char_t<'s'>>,
+          raw_fmt
+        >::type;
+};
 
 template <class InList, class OutList, size_t Counter>
 struct find_brace;
@@ -76,7 +100,7 @@ struct autoformat<tl<char_t<'{'>, SL>, tl<T, TL>>
     using format_block = typename other_brace::before;
     using rest_str     = typename other_brace::after;
 
-    using fmt_str = typename format_for<T>::type;
+    using fmt_str = typename format_str<T, format_block>::type;
 
     using type = tl<char_t<'%'>,
                     append_t<fmt_str, typename autoformat<rest_str, TL>::type>>;
