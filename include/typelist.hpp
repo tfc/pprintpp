@@ -70,5 +70,42 @@ struct append<tl<Head, Tail>, T>
 template <class TList, class T>
 using append_t = typename append<TList, T>::type;
 
+template <class TList, class T>
+struct contains;
+
+template <class T>
+struct contains<null_t, T> { static constexpr bool value {false}; };
+template <class T, class L>
+struct contains<tl<T, L>, T> { static constexpr bool value {true}; };
+template <class S, class T, class L>
+struct contains<tl<S, L>, T> : contains<L, T> {};
+
+
+template <class TList, class T>
+struct remove;
+
+template <class T>
+struct remove<null_t, T> { using type = null_t; };
+template <class T, class L>
+struct remove<tl<T, L>, T> { using type = typename remove<L, T>::type; };
+template <class S, class T, class L>
+struct remove<tl<S, L>, T> { using type = tl<S, typename remove<L, T>::type>; };
+
+template <class TL, class T>
+using remove_t = typename remove<TL, T>::type;
+
+
+template <class TList, class T, class TS>
+struct substitute;
+
+template <class T, class TS>
+struct substitute<null_t, T, TS> { using type = null_t; };
+template <class T, class L, class TS>
+struct substitute<tl<T, L>, T, TS> { using type = tl<TS, typename substitute<L, T, TS>::type>; };
+template <class S, class T, class L, class TS>
+struct substitute<tl<S, L>, T, TS> { using type = tl<S, typename substitute<L, T, TS>::type>; };
+
+template <class TL, class T, class TS>
+using substitute_t = typename substitute<TL, T, TS>::type;
 
 } // namespace tl
