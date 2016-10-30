@@ -129,6 +129,6 @@ make_t<Ts...> tie_types(Ts...);
         af::str(); \
     })
 
-#define pprintf(s, ...) printf(AUTOFORMAT(s, __VA_ARGS__), __VA_ARGS__);
+#define pprintf(s, ...) printf(AUTOFORMAT(s, ## __VA_ARGS__), ## __VA_ARGS__);
 
 }
