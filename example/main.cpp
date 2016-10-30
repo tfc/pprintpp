@@ -4,5 +4,5 @@
 
 int main()
 {
-    pprintf("{} hello {}! {}\n", 1, "world", 2.0) ;
+    pprintf("{} hello {s}! {}\n", 1, "world", 2.0) ;
 }

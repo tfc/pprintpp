@@ -19,7 +19,7 @@ In the worst case, the program might even crash.
 
 The python style print library allows for the following:
 ``` C++
-pprintf("An int {}, a float {}, a string {}\n", 123, 7.89, "abc");
+pprintf("An int {}, a float {}, a string {s}\n", 123, 7.89, "abc");
 ```
 The types are chosen *automatically* **at compile time**.
 This is both safe *and* convenient.
@@ -29,7 +29,7 @@ The assembly generated from the simple program...
 ``` c++
 int main()
 {
-    pprintf("{} hello {}! {}\n", 1, "world", 2);
+    pprintf("{} hello {s}! {}\n", 1, "world", 2);
 }
 ```
 
@@ -53,7 +53,7 @@ bash $ objdump -d example
 ```
 
 Dumping the read-only data section of the binary shows the `printf` format string.
-It looks as if the programmer had directly written the printf line as if he/she would never have used `pprintpp`:
+It looks as if the programmer had directly written the printf line without ever having used `pprintpp`:
 ```
 bash $ objdump -s -j .rodata example
 ...
