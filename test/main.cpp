@@ -1,4 +1,3 @@
-#include <iostream>
 #include <cassert>
 #include <cstring>
 #include <pprintpp.hpp>
@@ -9,6 +8,9 @@
 int main()
 {
     TEST("", "");
+
+    TEST(" { ", " \{ ");
+    TEST("{}", "\{}");
 
     TEST("%p", "{}", nullptr);
     TEST("%p", "{}", reinterpret_cast<void*>(0));
@@ -32,6 +34,7 @@ int main()
     TEST("%f",  "{}", 1.0f);
     TEST("%lf", "{}", 1.0);
 
-    std::cout << "Green, green, green! All tests passed." << std::endl;
+    pprintf("Green, green, green! All tests passed.\n");
+
     return 0;
 }
