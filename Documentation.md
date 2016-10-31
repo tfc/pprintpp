@@ -31,6 +31,13 @@ pprintf("Int with 10 characters indentation: {10}\n", 123);
 pprintf("Unsigned long long or whatever in hex notation: {#8x}\n", static_cast<unsigned long long>(0x123));
 ```
 
+### Printing Strings
+
+It would easily be possible, to transform `pprintf("{}", "some string");` to `printf("%s", "some string");`.
+For safety reasons, i decided to *not* automatically print everything as a string, which looks like a character array.
+
+In order to print such a string, please put an "s" between the braces: `{s}`: `pprintf("{s}", "some string");`.
+
 ### Printing Actual `{` Braces
 
 Braces can be normally printed as before `pprintpp`, but the opening ones have to be masked in order to 
