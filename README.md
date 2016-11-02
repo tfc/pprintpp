@@ -98,13 +98,12 @@ Embedded projects, which introduce their own logging/tracing functions, which ac
 ### Why `printf`, when there is stream style printing in C++?
 
 Yes, stream style printing is type safe, and from a features perspective clearly superior to `printf`.
-However, in some projects, C++ is used without streams, sometimes even without the STL.
+However, in some projects, C++ is used without streams.
 This library was designed to help out developers of such projects with some type safety and comfort.
 
-> The current version of this library is a reimplementation of what i once wrote some time ago.
-> This version uses STL stuff from `<tuple>` and `<type_traits>`
-> These can easily be reimplemented without the STL, if someone wishes to use this on some hardcore baremetal project where no STL is available. 
-> It's just that no one asked for that reimplementation, yet.
+An older version of the library even contained code which rewrote the parts which come from the STL, so it doesn't even depend on the STL.
+These can be reimplemented, if someone wishes to use this on some hardcore baremetal project where no STL is available. 
+It's just that no one asked for that reimplementation, yet.
 
 ### I am pretty happy with `fmtlib`. Why `pprintpp`?
 
