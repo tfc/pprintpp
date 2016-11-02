@@ -113,6 +113,12 @@ Those two libs have similar purposes, but put different weights on some objectiv
 - `fmtlib` is e.g. able to do reorder parameters like this: `fmt::format("{0}{1}{0}", "abra", "cad");`. `pprintpp` will never be able to do that, because `fmtlib` does the actual job of **formatting** at this point. `pprintpp` is just a preprocessor for `printf` strings. As `printf` can't reorder arguments, `pprintpp` will not be able to provide this functionality, either.
 - `fmtlib` can also be used to put the formatted result into `std::string`, or streams.
 
+> `printf` can indeed reorder arguments, but this is an *extension* of the standard: http://pubs.opengroup.org/onlinepubs/009695399/functions/printf.html
+> This can be used with `pprintpp` the following way:
+> ``` c++
+> pprintf("{2$} {1$}\n", 1, 2); // prints "2 1"
+> ```
+
 Base line: `fmtlib` is actually a *formatting library*. `pprintpp` is only a *preprocessor* which enables to automatically composing `printf`-compatible format strings. With other words: `pprintpp` is a `printf` *frontend*.
 
 You will profit from `pprintpp` over `fmtlib` if:
