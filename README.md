@@ -56,7 +56,7 @@ bash $ objdump -d example
   400454:       41 b8 02 00 00 00       mov    $0x2,%r8d
   40045a:       b9 04 06 40 00          mov    $0x400604,%ecx # <-- "world"
   40045f:       ba 01 00 00 00          mov    $0x1,%edx
-  400464:       be 10 06 40 00          mov    $0x400610,%esi # <-- "%d hello world %s!..."
+  400464:       be 10 06 40 00          mov    $0x400610,%esi # <-- "%d hello %s! %d"
   400469:       bf 01 00 00 00          mov    $0x1,%edi
   40046e:       31 c0                   xor    %eax,%eax
   400470:       e8 bb ff ff ff          callq  400430 <__printf_chk@plt>
