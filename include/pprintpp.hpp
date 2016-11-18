@@ -29,6 +29,8 @@
 
 namespace pprintpp {
 
+template <typename T> struct always_false { static constexpr bool value {false}; };
+
 using namespace typelist;
 using namespace charlist;
 
@@ -109,7 +111,10 @@ template <>
 struct autoformat<null_t, null_t> { using type = null_t; };
 
 template <typename TL>
-struct autoformat<null_t, TL> { using type = null_t; };
+struct autoformat<null_t, TL> {
+    using type = null_t;
+    static_assert(always_false<TL>::value, "There are more vars than format tokens!");
+};
 
 template <typename SL, typename TL>
 struct autoformat<tl<char_t<'%'>, tl<char_t<'%'>, SL>>, TL>
