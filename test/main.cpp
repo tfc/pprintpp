@@ -10,6 +10,10 @@ int main()
 {
     TEST("", "");
 
+    TEST("%%", "%%");
+    TEST("%d %f", "{} %f", 123, 1.23f);
+    TEST("%f %d", "%f {}", 1.23f, 123);
+
     TEST(" { ", " \\{ ");
     TEST("{}", "\\{}");
     TEST(" { %d } ", " \\{ {} } ", 123);
@@ -44,7 +48,7 @@ int main()
     TEST("%10x", "{10x}", 123u);
     TEST("%#10x", "{#10x}", 123u);
 
-    pprintf("Green, green, green! All tests passed.\n");
+    puts("Green, green, green! All tests passed.\n");
 
     pprintf("{s} {} {1} {} {} {} {} {} {} {} {} {} {} {} {} {#x}\n",
             "1",2u,3.0,4.0f,5ull,'6',7ul,8,9,10,11,12,13,14,15,16u);

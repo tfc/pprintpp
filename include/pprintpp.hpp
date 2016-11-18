@@ -112,6 +112,18 @@ template <typename TL>
 struct autoformat<null_t, TL> { using type = null_t; };
 
 template <typename SL, typename TL>
+struct autoformat<tl<char_t<'%'>, tl<char_t<'%'>, SL>>, TL>
+{
+    using type = tl<char_t<'%'>, tl<char_t<'%'>, typename autoformat<SL, TL>::type>>;
+};
+
+template <typename SL, typename T, typename TL>
+struct autoformat<tl<char_t<'%'>, SL>, tl<T, TL>>
+{
+    using type = tl<char_t<'%'>, typename autoformat<SL, TL>::type>;
+};
+
+template <typename SL, typename TL>
 struct autoformat<tl<char_t<'\\'>, tl<char_t<'{'>, SL>>, TL>
 {
     using type = tl<char_t<'{'>, typename autoformat<SL, TL>::type>;
