@@ -10,7 +10,7 @@ The acronym stands for "Python style print for C plus plus".
 It is a *pure compile time library*, and will add **no overhead** to the runtime of your programs.
 
 This library is for everyone, who uses C++, but sticks to printf-like functions (like `printf`, `fprintf`, `sprintf`, `snprintf`, etc...).
-`pprintpp` adds a typesafe adapter on top of those functions by preprocessing strings to the format printf and its friends are excepting.
+`pprintpp` adds a typesafe adapter on top of those functions by preprocessing strings to the format printf and its friends are expecting.
 Apart from the preformatted string, *no other symbols are added to the resulting binary*.
 This means that this library produces **no runtime code** at all, which distinguishes it from libraries like [fmtlib](https://github.com/fmtlib/fmt).
 
