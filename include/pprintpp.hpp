@@ -47,6 +47,8 @@ template <> struct type2fmt<unsigned>            { using type = char_tl_t<'u'>; 
 template <> struct type2fmt<unsigned long>       { using type = char_tl_t<'l', 'u'>; };
 template <> struct type2fmt<unsigned long long>  { using type = char_tl_t<'l', 'l', 'u'>; };
 
+template <> struct type2fmt<bool>                { using type = char_tl_t<'d'>; };
+
 template <> struct type2fmt<float>  { using type = char_tl_t<'f'>; };
 template <> struct type2fmt<double> { using type = char_tl_t<'l', 'f'>; };
 
