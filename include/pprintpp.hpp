@@ -101,7 +101,7 @@ struct find_brace<tl<char_t<C>, InList>, OutList, N>
 template <class OutList, size_t N>
 struct find_brace<null_t, OutList, N>
 {
-    static_assert(N + 1 == N, "foooo");
+    static_assert(N + 1 == N, "Missing } after {.");
 };
 
 template <typename SL, typename TL>
@@ -141,7 +141,7 @@ struct autoformat<tl<char_t<'{'>, SL>, TL>
     using format_block = typename other_brace::before;
     using rest_str     = typename other_brace::after;
 
-    static_assert(!std::is_same<TL, null_t>::value, "fooooo");
+    static_assert(!std::is_same<TL, null_t>::value, "There are more {} than arguments to print");
     using T = typename TL::head;
     using fmt_str = typename format_str<T, format_block>::type;
 
