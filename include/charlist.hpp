@@ -23,7 +23,6 @@
  */
 #pragma once
 
-#include <cstddef>
 
 #include "typelist.hpp"
 
