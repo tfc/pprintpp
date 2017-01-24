@@ -23,16 +23,53 @@
  */
 #pragma once
 
+#include <cstddef>
 
+#ifndef PPRINTPP_AVOID_STL
 #include <type_traits>
+#endif
 #include "typelist.hpp"
 
 namespace pprintpp {
+
+
+#ifndef PPRINTPP_AVOID_STL
 
 using nullptr_t = std::nullptr_t;
 
 template <typename T>
 using remove_cv_t = typename std::remove_cv<T>::type;
+
+template <typename A, typename B>
+using is_same = std::is_same<A, B>;
+
+template <bool C, typename A, typename B>
+using conditional = std::conditional<C, A, B>;
+
+template <typename T>
+using remove_ptr = std::remove_pointer<T>;
+
+template <typename T>
+using is_uint_type = std::is_unsigned<T>;
+
+#else
+
+using nullptr_t = decltype(nullptr);
+
+template<typename T>
+struct remove_c { using type = T; };
+template<typename T>
+struct remove_c<const T> { using type = T; };
+
+template<typename T>
+struct remove_v { using type = T; };
+template<typename T>
+struct remove_v<volatile T> { using type = T; };
+
+template <typename T>
+using remove_cv_t = typename remove_v<
+        typename remove_c<T>::type
+    >::type;
 
 template <typename A, typename B>
 struct is_same { static constexpr bool value {false}; };
@@ -57,5 +94,7 @@ struct is_uint_type {
     using uints = typelist::make_t<unsigned char, unsigned, unsigned long, unsigned long long>;
     static constexpr bool value {typelist::contains<uints, T>::value};
 };
+
+#endif
 
 }
