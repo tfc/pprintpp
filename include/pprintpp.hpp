@@ -66,12 +66,12 @@ struct format_str {
 
     using raw_fmt = typename type2fmt<T>::type;
 
-    using uint_x_fmt = typename std::conditional<is_uint && has_x,
+    using uint_x_fmt = typename conditional<is_uint && has_x,
           substitute_t<raw_fmt, char_t<'u'>, char_t<'x'>>,
           raw_fmt
         >::type;
 
-    using fmt_type = typename std::conditional<s_fmt && is_str,
+    using fmt_type = typename conditional<s_fmt && is_str,
           substitute_t<raw_fmt, char_t<'p'>, char_t<'s'>>,
           uint_x_fmt
         >::type;
