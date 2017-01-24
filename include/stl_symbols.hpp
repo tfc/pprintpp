@@ -25,6 +25,7 @@
 
 
 #include <type_traits>
+#include "typelist.hpp"
 
 namespace pprintpp {
 
@@ -50,5 +51,11 @@ struct remove_ptr { using type = T; };
 
 template <typename T>
 struct remove_ptr<T*> { using type = T; };
+
+template <typename T>
+struct is_uint_type {
+    using uints = typelist::make_t<unsigned char, unsigned, unsigned long, unsigned long long>;
+    static constexpr bool value {typelist::contains<uints, T>::value};
+};
 
 }

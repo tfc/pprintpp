@@ -61,7 +61,7 @@ struct format_str {
     static constexpr bool is_str {is_same<char,
         remove_cv_t<typename remove_ptr<raw_T>::type>>::value};
 
-    static constexpr bool is_uint {std::is_unsigned<raw_T>::value};
+    static constexpr bool is_uint {is_uint_type<raw_T>::value};
     static constexpr bool has_x   {contains<FL, char_t<'x'>>::value};
 
     using raw_fmt = typename type2fmt<T>::type;
