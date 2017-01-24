@@ -58,7 +58,7 @@ template <typename T, typename FL>
 struct format_str {
     using raw_T = remove_cv_t<T>;
     static constexpr bool s_fmt {contains<FL, char_t<'s'>>::value};
-    static constexpr bool is_str {std::is_same<char,
+    static constexpr bool is_str {is_same<char,
         remove_cv_t<typename std::remove_pointer<raw_T>::type>>::value};
 
     static constexpr bool is_uint {std::is_unsigned<raw_T>::value};
@@ -141,7 +141,7 @@ struct autoformat<tl<char_t<'{'>, SL>, TL>
     using format_block = typename other_brace::before;
     using rest_str     = typename other_brace::after;
 
-    static_assert(!std::is_same<TL, null_t>::value, "There are more {} than arguments to print");
+    static_assert(!is_same<TL, null_t>::value, "There are more {} than arguments to print");
     using T = typename TL::head;
     using fmt_str = typename format_str<T, format_block>::type;
 
