@@ -59,7 +59,7 @@ struct format_str {
     using raw_T = remove_cv_t<T>;
     static constexpr bool s_fmt {contains<FL, char_t<'s'>>::value};
     static constexpr bool is_str {is_same<char,
-        remove_cv_t<typename std::remove_pointer<raw_T>::type>>::value};
+        remove_cv_t<typename remove_ptr<raw_T>::type>>::value};
 
     static constexpr bool is_uint {std::is_unsigned<raw_T>::value};
     static constexpr bool has_x   {contains<FL, char_t<'x'>>::value};

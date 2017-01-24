@@ -45,4 +45,10 @@ struct conditional { using type = A; };
 template <typename A, typename B>
 struct conditional<false, A, B> { using type = B; };
 
+template <typename T>
+struct remove_ptr { using type = T; };
+
+template <typename T>
+struct remove_ptr<T*> { using type = T; };
+
 }
