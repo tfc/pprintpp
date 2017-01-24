@@ -76,11 +76,5 @@ struct print_seg<typelist::null_t> {
 
 int main()
 {
-    struct strprov {
-        static constexpr const char * const str() {
-            return "first chunk|second chunk|third chunk";
-        }
-    };
-
     segprintf("some int: | some float: | some other str: |\n", 123, 4.56, "foobar");
 }
