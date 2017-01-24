@@ -23,7 +23,7 @@
  */
 #pragma once
 
-#include <type_traits>
+#include "stl_symbols.hpp"
 #include "charlist.hpp"
 
 namespace pprintpp {
@@ -51,16 +51,15 @@ template <> struct type2fmt<bool>                { using type = char_tl_t<'d'>; 
 template <> struct type2fmt<float>  { using type = char_tl_t<'f'>; };
 template <> struct type2fmt<double> { using type = char_tl_t<'l', 'f'>; };
 
-template <> struct type2fmt<std::nullptr_t> { using type = char_tl_t<'p'>; };
+template <> struct type2fmt<nullptr_t> { using type = char_tl_t<'p'>; };
 template <typename T> struct type2fmt<T*>   { using type = char_tl_t<'p'>; };
 
 template <typename T, typename FL>
 struct format_str {
-    using raw_T = typename std::remove_cv<T>::type;
+    using raw_T = remove_cv_t<T>;
     static constexpr bool s_fmt {contains<FL, char_t<'s'>>::value};
     static constexpr bool is_str {std::is_same<char,
-        typename std::remove_cv<
-            typename std::remove_pointer<raw_T>::type>::type>::value};
+        remove_cv_t<typename std::remove_pointer<raw_T>::type>>::value};
 
     static constexpr bool is_uint {std::is_unsigned<raw_T>::value};
     static constexpr bool has_x   {contains<FL, char_t<'x'>>::value};
