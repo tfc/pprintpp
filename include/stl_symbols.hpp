@@ -50,7 +50,7 @@ template <typename T>
 using remove_ptr = std::remove_pointer<T>;
 
 template <typename T>
-using is_uint_type = std::is_unsigned<T>;
+using is_int_type = std::is_integral<T>;
 
 #else
 
@@ -90,9 +90,9 @@ template <typename T>
 struct remove_ptr<T*> { using type = T; };
 
 template <typename T>
-struct is_uint_type {
-    using uints = typelist::make_t<unsigned char, unsigned, unsigned long, unsigned long long>;
-    static constexpr bool value {typelist::contains<uints, T>::value};
+struct is_int_type {
+    using ints = typelist::make_t<char, signed char, int, long, long long, unsigned char, unsigned, unsigned long, unsigned long long>;
+    static constexpr bool value {typelist::contains<ints, T>::value};
 };
 
 #endif

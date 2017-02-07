@@ -61,13 +61,15 @@ struct format_str {
     static constexpr bool is_str {is_same<char,
         remove_cv_t<typename remove_ptr<raw_T>::type>>::value};
 
-    static constexpr bool is_uint {is_uint_type<raw_T>::value};
+    static constexpr bool is_int {is_int_type<raw_T>::value};
     static constexpr bool has_x   {contains<FL, char_t<'x'>>::value};
 
     using raw_fmt = typename type2fmt<T>::type;
 
-    using uint_x_fmt = typename conditional<is_uint && has_x,
-          substitute_t<raw_fmt, char_t<'u'>, char_t<'x'>>,
+    using uint_x_fmt = typename conditional<is_int && has_x,
+          substitute_t<
+              substitute_t<raw_fmt, char_t<'d'>, char_t<'x'>>,
+                                    char_t<'u'>, char_t<'x'>>,
           raw_fmt
         >::type;
 

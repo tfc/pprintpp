@@ -50,6 +50,11 @@ int main()
     TEST("%10x", "{10x}", 123u);
     TEST("%#10x", "{#10x}", 123u);
 
+    // Give the user hex if asked for explicitly.
+    TEST("%x",   "{x}", 123);
+    TEST("%lx",  "{x}", 123l);
+    TEST("%llx", "{x}", 123ll);
+
     puts("Green, green, green! All tests passed.\n");
 
     pprintf("{s} {} {1} {} {} {} {} {} {} {} {} {} {} {} {} {#x}\n",
