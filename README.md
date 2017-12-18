@@ -6,13 +6,13 @@
 
 The acronym stands for "Python style print for C plus plus".
 
-`pprintpp` is a **header-only** C++ library, which aims to make `printf` use safe and easy.
-It is a *pure compile time library*, and will add **no overhead** to the runtime of your programs.
+`pprintpp` is a **header-only** C++ library which aims to make `printf` use safe and easy.
+It is a *pure compile time library* and will add **no overhead** to the runtime of your programs.
 
-This library is for everyone, who uses C++, but sticks to printf-like functions (like `printf`, `fprintf`, `sprintf`, `snprintf`, etc...).
+This library is for everyone who uses C++ but sticks to printf-like functions (like `printf`, `fprintf`, `sprintf`, `snprintf`, etc...).
 `pprintpp` adds a typesafe adapter on top of those functions by preprocessing strings to the format printf and its friends are expecting.
 Apart from the preformatted string, *no other symbols are added to the resulting binary*.
-This means that this library produces **no runtime code** at all, which distinguishes it from libraries like [fmtlib](https://github.com/fmtlib/fmt).
+This means that this library produces **no runtime code** at all, which distinguishes it from libraries like [fmtlib](https://github.com/fmtlib/fmt) (There has been some controversy in the comparison with `fmt` - look into the FAQ in this document on that matter please).
 
 ## Dependencies
 
@@ -47,7 +47,7 @@ int main()
 }
 ```
 
-...shows, that this library comes with *no* runtime overhead:
+...shows that this library comes with *no* runtime overhead:
 ```
 bash $ objdump -d example
 ...
@@ -81,7 +81,7 @@ Contents of section .rodata:
 
 `pprintpp` will transform a tuple `(format_str, [type list])` to `printf_compatible_format_string`.
 
-That means, that it can be used with any `printf`-like function. You just need to define a macro, like for example these ones for `printf` and `snprintf`:
+That means that it can be used with any `printf`-like function. You just need to define a macro, like for example, these ones for `printf` and `snprintf`:
 
 ``` c++
 #define pprintf(fmtstr, ...) printf(AUTOFORMAT(fmtstr, ## __VA_ARGS), ## __VA_ARGS__)
@@ -91,7 +91,7 @@ That means, that it can be used with any `printf`-like function. You just need t
 
 > Unfortunately, it is not possible to express this detail without macros in C++. However, the rest of the library was designed without macros at all.
 
-Embedded projects, which introduce their own logging/tracing functions, which accept `printf`-style format string, will also profit from this library.
+Embedded projects that introduce their own logging/tracing functions which accept `printf`-style format string, will also profit from this library.
 
 ## FAQ
 
@@ -107,22 +107,33 @@ It's just that no one asked for that reimplementation, yet.
 
 ### I am pretty happy with `fmtlib`. Why `pprintpp`?
 
-Those two libs have similar purposes, but put different weights on some objectives:
+Those two libs have similar purposes but completely different approaches. `pprintpp` is just a *compile-time frontend* that adds type safety and comfort to *existing* `printf`-style functions. `fmtlib` is a complete string formatting and printing library that produces actual code and acts as a complete substitute for `printf` and the output/printing part of C++ streams.
 
-- `fmtlib` is e.g. able to do reorder parameters like this: `fmt::format("{0}{1}{0}", "abra", "cad");`. `pprintpp` will never be able to do that, because `fmtlib` does the actual job of **formatting** at this point. `pprintpp` is just a preprocessor for `printf` strings. As `printf` can't reorder arguments, `pprintpp` will not be able to provide this functionality, either.
-- `fmtlib` can also be used to put the formatted result into `std::string`, or streams.
+### Is `pprintpp` faster than `fmtlib`?
 
-> `printf` can indeed reorder arguments, but this is an *extension* of the standard: http://pubs.opengroup.org/onlinepubs/009695399/functions/printf.html
-> This can be used with `pprintpp` the following way:
-> ``` c++
-> pprintf("{2$} {1$}\n", 1, 2); // prints "2 1"
-> ```
+Yes and no: `fmtlib` has its own (highly optimized and elegant) code for formatting strings which has demonstrably high performance. When you compare the performance of `pprintpp` and `fmtlib`, you actually compare the performance of `printf` and `fmtlib`, because `pprintpp` adds no code to your binary.
 
-Base line: `fmtlib` is actually a *formatting library*. `pprintpp` is only a *preprocessor* which enables to automatically composing `printf`-compatible format strings. With other words: `pprintpp` is a `printf` *frontend*.
+Depending on the `printf` implementation you use, you are faster or slower than `fmtlib`.
+
+### Is `pprintpp` smaller than `fmtlib`/some other library?
+
+Certainly. No matter how much you use `pprintpp`, it will never result in actual runtime code. It only fixes your format strings at compile time.
+
+If binary size is your concern and you want to reduce the number of libraries you link against, `pprintpp` is totally for you.
+
+This library has first been used in a C++ bare metal operating system project that was also optimized for size. For logging purposes it used its own tiny `printf` implementation combined with `pprintpp` (it was not linked with the standard `libc` or runtime parts of the STL). This way the whole printing-related part of the binary was kept within a few hundred bytes.
+
+### Will I profit over `fmtlib`?
+
+`fmtlib` is a full-blown, highly optimized *formatting library*. `pprintpp` is only a *preprocessor* which enables for automatically composing `printf`-compatible format strings. With other words: `pprintpp` is a `printf` *frontend*.
 
 You will profit from `pprintpp` over `fmtlib` if:
-- you don't need more formatting features than `printf` and friends provide
-- You want to add type safety and comfort to your printing **without adding runtime code**.
+
+- You don't need more formatting features than `printf` and friends provide, and/or cannot use something else than `printf` for whatever reason.
+- You have your own tiny and/or fast `printf` implementation and want to make it type safe and comfortable to use
+- You want to add type safety and comfort to your printing **without adding additional runtime code**.
+
+If you are writing a user space application that can handle some bytes of printing library, then you are most probably better with `fmtlib` or the standard C++ streams.
 
 ### I don't see how this helps printing my own types/classes?
 
