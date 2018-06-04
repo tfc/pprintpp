@@ -77,6 +77,32 @@ Contents of section .rodata:
  400620 00                                   .
 ```
 
+## More Examples
+
+In `printf`, in order to e.g. add a minimum width to a number as in `printf("%10d", 123);`, one needs to combine format specifiers (`10`) with conversion letters (`d`).
+
+In `pprintpp`, this is easily possible, too: You would just write `{10}` to get the same effect. The library picks the format specifiers from between the curly braces and merges them with the correct conversion letter that it deduces from the type of the actual expression.
+This way you get `%10d` for integers and `%10f` for floating point variables while using`{10}` for both.
+Just look up the format specifiers in the documentation of your `printf` implementation and use them.
+
+This output is from the file [`examples/main.cpp`](examples/main.cpp):
+
+``` bash
+                            Meaning | Format str -> Result
+              --------------------- | ---------------------
+                       String "abc" | {s}     -> "abc"
+           String "abc" + min width | {10s}   -> "       abc"
+               value 0x123, default | {}      -> "291"
+                   value 0x123, hex | {x}     -> "123"
+                      minimum width | {10}    -> "       291"
+                    hex + min width | {10x}   -> "       123"
+       hex + min width + hex prefix | {#10x}  -> "     0x123"
+  hex + min w. + hex prefix + 0-pad | {#010x} -> "0x00000123"
+                                 FP | {}      -> "12.345000"
+                     FP + min width | {10}    -> " 12.345679"
+         FP + width + max precision | {5.2}   -> "12.35"
+```
+
 ## Printf Compatibility
 
 `pprintpp` will transform a tuple `(format_str, [type list])` to `printf_compatible_format_string`.
