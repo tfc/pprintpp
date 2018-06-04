@@ -85,7 +85,7 @@ In `pprintpp`, this is easily possible, too: You would just write `{10}` to get 
 This way you get `%10d` for integers and `%10f` for floating point variables while using`{10}` for both.
 Just look up the format specifiers in the documentation of your `printf` implementation and use them.
 
-This output is from the file [`examples/main.cpp`](examples/main.cpp):
+This output is from the file [`example/main.cpp`](example/main.cpp):
 
 ``` bash
                             Meaning | Format str -> Result
