@@ -168,7 +168,7 @@ make_t<Ts...> tie_types(Ts...);
 
 #define AUTOFORMAT(s, ...) \
     ({ \
-        struct strprov { static constexpr const char * const str() { return s; } }; \
+        struct strprov { static constexpr const char * str() { return static_cast<const char*>(s); } }; \
         using paramtypes = decltype(pprintpp::tie_types(__VA_ARGS__)); \
         using af = pprintpp::autoformat_t<strprov, paramtypes>; \
         af::str(); \

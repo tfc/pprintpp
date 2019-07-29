@@ -78,15 +78,17 @@ struct tl_to_varlist<typelist::tl<char_t<c>, restlist>, chars...>
 
 template <>
 struct tl_to_varlist<typelist::null_t> {
-    static const char * const str() { return ""; }
+    static constexpr const char * str() {
+      return static_cast<const char *>("");
+    }
 };
 template <char ... chars>
 struct tl_to_varlist<typelist::null_t, chars...> {
     using list = char_tl<chars...>;
 
-    static const char * const str() {
-        static constexpr const char string[] = {chars..., '\0'};
-        return string;
+    static const char * str() {
+        static const char string[] = {chars..., '\0'};
+        return static_cast<const char *>(string);
     }
 };
 
