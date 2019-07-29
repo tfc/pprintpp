@@ -1,7 +1,8 @@
+#include <pprintpp/pprintpp.hpp>
+
 #include <cassert>
 #include <cstring>
 #include <cstdio>
-#include <pprintpp.hpp>
 
 #define TEST(correct_str, ...) \
     assert(!strcmp(AUTOFORMAT(__VA_ARGS__), correct_str))
