@@ -21,6 +21,32 @@ add_executable(${PROJECT_NAME}-example example/main.cpp)
 target_link_libraries(${PROJECT_NAME}-example ${PROJECT_NAME})
 target_compile_options(${PROJECT_NAME}-example PRIVATE -Wall -Wextra -Werror)
 
+set(CPACK_PACKAGE_NAME "pprintpp")
+set(CPACK_PACKAGE_VENDOR "galowicz.de")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Typesafe Python Style Printf Formatting for C++")
+set(CPACK_PACKAGE_VERSION "1.0.0")
+set(CPACK_PACKAGE_VERSION_MAJOR "1")
+set(CPACK_PACKAGE_VERSION_MINOR "0")
+set(CPACK_PACKAGE_VERSION_PATCH "0")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "pprintpp")
+set(CPACK_PACKAGE_CONTACT "Jacek Galowicz <jacek@galowicz.de>")
+
+set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
+set(CPACK_SET_DESTDIR true)
+
+set(PKG_CONFIG_REQUIRES)
+set(PKG_CONFIG_LIBDIR "\${prefix}/lib")
+set(PKG_CONFIG_INCLUDEDIR "\${prefix}/include")
+set(PKG_CONFIG_LIBS)
+set(PKG_CONFIG_CFLAGS "-I\${includedir}")
+
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/pkg-config.pc.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
+  )
+
+include(CPack)
+
 include(GNUInstallDirs)
 
 install(
@@ -38,18 +64,6 @@ install(
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/
   )
 
-set(CPACK_PACKAGE_NAME "pprintpp")
-set(CPACK_PACKAGE_VENDOR "galowicz.de")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "pprintpp - Typesafe Python Style Printf Formatting for C++")
-set(CPACK_PACKAGE_VERSION "1.0.0")
-set(CPACK_PACKAGE_VERSION_MAJOR "1")
-set(CPACK_PACKAGE_VERSION_MINOR "0")
-set(CPACK_PACKAGE_VERSION_PATCH "0")
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "pprintpp")
-set(CPACK_PACKAGE_CONTACT "Jacek Galowicz <jacek@galowicz.de>")
-
-set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
-set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST /usr/lib64/)
-
-include(CPack)
-
+INSTALL(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc"
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+  )
