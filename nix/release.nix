@@ -5,33 +5,36 @@
 
 let
   pprintpp = pkgs.callPackage (import ./build.nix) {};
-  packageDerivation = generator:
-    let
-      ending = if generator == "DEB"
-                 then "deb"
-                 else if generator == "RPM"
-                   then "rpm"
-                   else builtins.throw "unknown generator: ${generator}";
-      packages = with pkgs; if generator == "RPM" then [ rpm ] else [];
-    in pprintpp.overrideAttrs (old: {
-      nativeBuildInputs = old.nativeBuildInputs ++ packages;
+  packageDerivation = generatorName:
+    pprintpp.overrideAttrs (old: {
+      inherit generatorName;
+      nativeBuildInputs = old.nativeBuildInputs ++ [ pkgs.rpm ];
       configurePhase = "cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_BUILD_TYPE=Release $src";
       installPhase = ''
-        cpack -G ${generator}
+        ext=''${generatorName,,}
+        echo "extension is $ext"
+
+        cpack -G $generatorName
         mkdir -p $out/nix-support
-        cp *.${ending} $out/
-        for file in $(find $out -name "*.${ending}"); do
-          echo "file ${ending} $file" >> $out/nix-support/hydra-build-products
+        cp *.$ext $out/
+        for file in $(find $out -name "*.$ext"); do
+          echo "file $ext $file" >> $out/nix-support/hydra-build-products
         done
       '';
     });
   packageGenerator = generator: diskImage:
-    pkgs.vmTools.runInLinuxImage (packageDerivation "DEB" // {
+    pkgs.vmTools.runInLinuxImage (packageDerivation generator // {
       inherit diskImage;
     });
+  deb = packageGenerator "DEB" pkgs.vmTools.diskImages.ubuntu1904x86_64;
+  rpm = packageGenerator "RPM" pkgs.vmTools.diskImages.fedora30x86_64;
 
 in {
   inherit pprintpp;
-  pprintpp-deb = packageGenerator "DEB" pkgs.vmTools.diskImages.ubuntu1904x86_64;
-  pprintpp-rpm = packageGenerator "RPM" pkgs.vmTools.diskImages.fedora30x86_64;
+  packages = pkgs.runCommand "gather-packages" {} ''
+    mkdir -p $out/nix-support
+    for folder in ${deb} ${rpm}; do
+      cat $folder/nix-support/hydra-build-products >> $out/nix-support/hydra-build-products
+    done
+  '';
 }
