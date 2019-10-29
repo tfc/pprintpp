@@ -1,16 +1,28 @@
-
 #include "../pprintpp.hpp"
 
+#include <cassert>
+#include <cstring>
 #include <typeinfo>
 #include <cstdio>
+#include <exception>
 
-extern "C" int test(int, char* []);
+extern "C" int test_1(int, char* []);
+extern "C" int test_2(int, char* []);
+extern "C" int test_3(int, char* []);
 
 #ifdef _MSC_VER
-int wmain(int, wchar_t * argv[])
+int wmain(int, wchar_t * [])
 #else
-int main(int, char * argv[])
+int main(int, char* argv[])
 #endif // _MSC_VER
+{
+	// standard tests
+	test_1(0, 0);
+	test_2(0, 0);
+	test_3(0, 0);
+	return 42;
+}
+extern "C" int test_1(int, char* [])
 {
 	// DBJ  -- added 
 #ifdef _MSC_VER
@@ -61,17 +73,8 @@ int main(int, char * argv[])
 		"FP + width + max precision", 12.34567890123456789
 	);
 #endif // __clang__
-    // standard tests
-	test(0, 0);
-
+	return 42;
 }
-
-#include "../pprintpp.hpp"
-
-#include <cassert>
-#include <cstring>
-#include <cstdio>
-
 /*
 Example:
  auto compile_time_format_ =  AUTOFORMAT("{} {}", 123, 1.23f)
@@ -80,7 +83,7 @@ Example:
 #define TEST(printf_format_correct_str, ...) \
     assert(!strcmp(AUTOFORMAT(__VA_ARGS__), printf_format_correct_str))
 
-extern "C" int test(int, char* [])
+extern "C" int test_2(int, char* [])
 {
 	TEST("", "");
 
@@ -137,3 +140,10 @@ extern "C" int test(int, char* [])
 	return 0;
 }
 
+extern "C" int test_3(int, char* [])
+{
+	std::exception x1("runtime      error");
+	std::exception x2("cosmological error");
+
+	return pprintf("\n XC1: {s} \nXC2: {s}", x1.what(), x2.what());
+}
