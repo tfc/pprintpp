@@ -91,9 +91,13 @@ namespace jacek_galowicz {
 			using list = char_tl<chars...>;
 
 			// DBJ -- maketh into constexpr
+			// DBJ -- instances of this template are 
+			//        unique types, thus type level
+			//        values are ok to use
+			constexpr static const char string_[]{ chars..., '\0' };
+
 			static constexpr const char* str() {
-				static const char string[] = { chars..., '\0' };
-				return static_cast<const char*>(string);
+				return static_cast<const char*>(string_);
 			}
 		};
 

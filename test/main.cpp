@@ -145,7 +145,9 @@ extern "C" int test_3(int, wchar_t* [])
 	std::exception x1("runtime      error");
 	std::exception x2("cosmological error");
 
-	return pprintf("\nXC1: {} \nXC2: {s}", x1.what(), x2.what() );
+#define pprintf_str_arg(x) static_cast<char const *>(x)
+
+	return pprintf("\nXC1: {} \nXC2: {s}", (x1.what()), x2.what() );
 
 	// is this optimized away?
 	const char* slit = "STRING LITERAL";
