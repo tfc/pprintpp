@@ -1,2 +1,9 @@
-/result
-/build
+result/*
+build/*
+out/*
+
+# Visual Studio paraphernalia -- not all of it
+.vs/*
+x64/*
+Debug/*
+Release/*
