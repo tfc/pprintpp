@@ -6,9 +6,9 @@
 #include <cstdio>
 #include <exception>
 
-extern "C" int test_1(int, char* []);
-extern "C" int test_2(int, char* []);
-extern "C" int test_3(int, char* []);
+extern "C" int test_1(int, wchar_t* []);
+extern "C" int test_2(int, wchar_t* []);
+extern "C" int test_3(int, wchar_t* []);
 
 #ifdef _MSC_VER
 int wmain(int, wchar_t * [])
@@ -22,14 +22,14 @@ int main(int, char* argv[])
 	test_3(0, 0);
 	return 42;
 }
-extern "C" int test_1(int, char* [])
+extern "C" int test_1(int, wchar_t* [])
 {
 	// DBJ  -- added 
 #ifdef _MSC_VER
 	// NOTE: make sure you set the font that can display your glyphs
 	// Lucida Console seems ok for cyrillic glyphs
 	// no can do -- pprintf("{S}\n\n", L"Dušan Jovanović" );
-	pprintf("\n\n{s}\n\n", u8"Dusan Jovanovic in cyrillic: Душан Јовановић" ); // utf8 encoded char
+	pprintf("\n\n{s}\n\n", u8"Dusan Jovanovic in cyrillic: Душан Јовановић (this is u8 string literal)" ); // utf8 encoded char
 	// prints pointer -- pprintf("{}\n\n", u8"Душан Јовановић" ); // utf8 encoded char
 #endif // _MSC_VER
 
@@ -83,7 +83,7 @@ Example:
 #define TEST(printf_format_correct_str, ...) \
     assert(!strcmp(AUTOFORMAT(__VA_ARGS__), printf_format_correct_str))
 
-extern "C" int test_2(int, char* [])
+extern "C" int test_2(int, wchar_t* [])
 {
 	TEST("", "");
 
@@ -140,10 +140,16 @@ extern "C" int test_2(int, char* [])
 	return 0;
 }
 
-extern "C" int test_3(int, char* [])
+extern "C" int test_3(int, wchar_t* [])
 {
 	std::exception x1("runtime      error");
 	std::exception x2("cosmological error");
 
-	return pprintf("\n XC1: {s} \nXC2: {s}", x1.what(), x2.what());
+	return pprintf("\nXC1: {} \nXC2: {s}", x1.what(), x2.what() );
+
+	// is this optimized away?
+	const char* slit = "STRING LITERAL";
+	return pprintf("\nSTRING LITERAL: {} ", slit );
+
+	auto dumzy [[maybeunused]] = true;
 }
