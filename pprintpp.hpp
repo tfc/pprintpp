@@ -64,12 +64,51 @@ namespace jacek_galowicz {
 		template <> struct type2fmt<double> { using type = char_tl_t<'l', 'f'>; };
 
 		template <> struct type2fmt<nullptr_t> { using type = char_tl_t<'p'>; };
-		template <typename T> struct type2fmt<T*> { using type = char_tl_t<'p'>; };
+
+		// DBJ -- this makes char * output into 'p' aka pointer output
+		// template <typename T> struct type2fmt<T*> { using type = char_tl_t<'p'>; };
+
+		// DBJ -- BEGIN CHANGE
+		template<class T, T v>
+		struct my_integral_constant {
+			static constexpr T value = v;
+			typedef T value_type;
+			typedef my_integral_constant type; // using injected-class-name
+			constexpr operator value_type() const noexcept { return value; }
+			constexpr value_type operator()() const noexcept { return value; } 
+		};
+        
+		template< bool v_ >
+		struct s_or_p : my_integral_constant<bool, v_ > {} ;
+
+		template<> struct s_or_p<true> : my_integral_constant<bool, true >
+		{
+			using type = char_tl_t<'s'>;
+		};
+
+		template<> struct s_or_p<false> : my_integral_constant<bool, false >
+		{
+			using type = char_tl_t<'p'>;
+		};
+
+		template <
+			typename T
+		> 
+		struct type2fmt<T*> 
+		{
+			using raw_T = remove_cv_t<T>;
+			static constexpr bool is_str{ is_same<char,
+					remove_cv_t<typename remove_ptr<raw_T>::type>>::value };
+
+			using type = typename s_or_p<is_str>::type;
+		};
+		// DBJ -- END CHANGE
 
 		template <typename T, typename FL>
 		struct format_str {
 			using raw_T = remove_cv_t<T>;
 			static constexpr bool s_fmt{ contains<FL, char_t<'s'>>::value };
+
 			static constexpr bool is_str{ is_same<char,
 				remove_cv_t<typename remove_ptr<raw_T>::type>>::value };
 

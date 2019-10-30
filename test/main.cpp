@@ -100,7 +100,8 @@ extern "C" int test_2(int, wchar_t* [])
 
 	// For safety reasons:
 	// Only print strings as strings, if the user also writes {s}
-	TEST("%p", "{}", "str");
+	// TEST("%p", "{}", "str");
+	TEST("%s", "{}", "str");
 	TEST("%s", "{s}", "str");
 
 	TEST("%c", "{}", static_cast<char>(123));
@@ -147,11 +148,13 @@ extern "C" int test_3(int, wchar_t* [])
 
 #define pprintf_str_arg(x) static_cast<char const *>(x)
 
-	return pprintf("\nXC1: {} \nXC2: {s}", (x1.what()), x2.what() );
+	pprintf("\nXC1: { } \nXC2: {s}", x1.what(), x2.what() );
 
 	// is this optimized away?
+	// both clang and msvc seem to do so ...
 	const char* slit = "STRING LITERAL";
-	return pprintf("\nSTRING LITERAL: {} ", slit );
+	pprintf("\nSTRING LITERAL: { } ", slit );
 
-	auto dumzy [[maybeunused]] = true;
+	[[maybe_unused]] auto dumzy = true;
+	return EXIT_SUCCESS;
 }
