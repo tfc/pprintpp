@@ -16,6 +16,16 @@ int wmain(int, wchar_t * [])
 int main(int, char* argv[])
 #endif // _MSC_VER
 {
+#ifdef __clang__
+	//__clang__             // set to 1 if compiler is clang
+	//	__clang_major__       // integer: major marketing version number of clang
+	//	__clang_minor__       // integer: minor marketing version number of clang
+	//	__clang_patchlevel__  // integer: marketing patch level of clang
+	//	__clang_version__     // string: full version number
+	printf( "\nCLANG: %s\n" , __clang_version__);
+#else
+	printf("\n_MSVC_LANG: %lu\n", _MSVC_LANG);
+#endif
 	// standard tests
 	test_1(0, 0);
 	test_2(0, 0);
@@ -98,9 +108,10 @@ extern "C" int test_2(int, wchar_t* [])
 	TEST("%p", "{}", nullptr);
 	TEST("%p", "{}", reinterpret_cast<void*>(0));
 
-	// For safety reasons:
-	// Only print strings as strings, if the user also writes {s}
+	// DBJ -- {s} is not required for string output
+	// JG to comment
 	// TEST("%p", "{}", "str");
+	// the two will both output the string
 	TEST("%s", "{}", "str");
 	TEST("%s", "{s}", "str");
 
@@ -146,12 +157,11 @@ extern "C" int test_3(int, wchar_t* [])
 	std::exception x1("runtime      error");
 	std::exception x2("cosmological error");
 
-#define pprintf_str_arg(x) static_cast<char const *>(x)
 
-	pprintf("\nXC1: { } \nXC2: {s}", x1.what(), x2.what() );
+	// DBJ -- {s} is not required for string output
+	// JG to comment
+	pprintf("\nXC1: { } \nXC2: { }", x1.what(), x2.what() );
 
-	// is this optimized away?
-	// both clang and msvc seem to do so ...
 	const char* slit = "STRING LITERAL";
 	pprintf("\nSTRING LITERAL: { } ", slit );
 
