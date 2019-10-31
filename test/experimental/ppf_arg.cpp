@@ -22,16 +22,12 @@ inline constexpr T ppf_arg(T const & value) noexcept
 	return value;
 }
 
-#define TUPLE_USE 1
-
 //
-// unique_ptr<char[]> is the fastest standard C++, runtime char buffer
 //
 template<typename ... Args>
 inline auto	to_buff (char const* fmt, Args ...args) noexcept -> unique_ptr<char[]>
 {
 	assert(fmt != nullptr);
-#ifdef TUPLE_USE
 	/*
      I do now want to call the sequence of frm_args() twice
 
@@ -41,9 +37,9 @@ inline auto	to_buff (char const* fmt, Args ...args) noexcept -> unique_ptr<char[
 	 and then
 	size = std::snprintf(buf.get(), size, fmt, ppf_arg(args) ...);
 
-	 */
-
-	// frm)args' are called only once 
+	ppf_arg's are called only once 
+	rezults are stored in a tuple
+	*/
 	auto args_tup = make_tuple( ppf_arg(args) ...);
 	auto snprintf_tup_1 = make_tuple(nullptr, 0, fmt );
 
@@ -51,6 +47,7 @@ inline auto	to_buff (char const* fmt, Args ...args) noexcept -> unique_ptr<char[
 	size_t size = apply(std::snprintf, tuple_cat(snprintf_tup_1, args_tup));
 	assert(size > 0);
 
+	// unique_ptr<char[]> is the fastest standard C++, runtime char buffer
 	auto buf = std::make_unique<char[]>(size + 1);
 	auto snprintf_tup_2 = make_tuple(buf.get(), size, fmt);
 	// populate the buffer, do not call the  ppf_arg's again
@@ -58,16 +55,6 @@ inline auto	to_buff (char const* fmt, Args ...args) noexcept -> unique_ptr<char[
 	assert(size > 0);
 	// move out the unique_ptr
 	return buf;
-#else
-	// 1: what is the size required
-	size_t size = 1 + std::snprintf(nullptr, 0, fmt, ppf_arg(args) ...);
-	assert(size > 0);
-	// 2: use it at runtime
-	auto buf = std::make_unique<char[]>(size + 1);
-	size = std::snprintf(buf.get(), size, fmt, ppf_arg(args) ...);
-	assert(size > 0);
-	return buf;
-#endif
 }
 ///////////////////////////////////////////////////////////////////////
 // user defined type 'Foo'
@@ -99,8 +86,10 @@ extern "C" int test_4(int, wchar_t* [])
 {
 	/*
 	this compiles but will likely crash the program as printf() input is wrong
+	if good compiler will understand what is required and will replace them Foo's
+	with "A" and "B"
 	*/
-	pprintf("\n\nFoo: %s, Foo: %s, %s %d\n\n", Foo{ "A" }, Foo{ "B" }, "The answer is:", 42);
+	pprintf("\n\nFoo: %s, Foo: %s, %s %d", Foo{ "A" }, Foo{ "B" }, "The answer is:", 42);
 
 	/*
 	this does not compile , there is no transformation of 'Foo' instances to the 'char *'
@@ -108,8 +97,8 @@ extern "C" int test_4(int, wchar_t* [])
 	pprintf("\n\nFoo: {s}, Foo: {s}, {s} {d}\n\n", Foo{ "A" }, Foo{ "B" }, "The answer is:", 42);
 	*/
 
-	/*	this compiles and works and is snazzy C++, alas completely unrelated to pprintf	
-	    internaly one ppf_arg() is called for each argument, allways
+	/*	this compiles and works and is snazzy C++, alas completely unrelated to pprintf.	
+	    internaly one ppf_arg() is called for each argument, allways.
 		regardless of the arguments type
 	*/
 	{
@@ -123,7 +112,7 @@ extern "C" int test_4(int, wchar_t* [])
 	pprintf and user defined types
 
 	now the following will compile and work and will use pprintf
-	and depends on ppf_arg() overload, it is coupled to it
+	Foo depends on ppf_arg() overload to be also user defined, it is coupled to it
 	*/
 	pprintf("\n\nFoo: {s}, Foo: {s}, {s} {d}", ppf_arg(Foo{ "A" }), ppf_arg(Foo{ "B" }), "The answer is:", 42);
 
