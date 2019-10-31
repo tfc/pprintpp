@@ -28,5 +28,11 @@
     <ClCompile Include="test\wmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test\experimental\ppf_arg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test\windows_branch_readme.md" />
   </ItemGroup>
 </Project>

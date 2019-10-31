@@ -25,11 +25,11 @@
  * SOFTWARE.
  */
 
+// DBJ -- to print 'char *' as a string is standard behaviour
+// #define PPRINTPP_STANDARD_CHAR_PTR 1
+
 #ifndef PPRINTPP_AVOID_STL
-#define PPRINTPP_AVOID_STL 1
-#pragma message("PPRINTPP MSVC *NOT* using STD lib and *NOT* throwning exceptions\n\n")
-#else
-#pragma message("PPRINTPP MSVC *using* STD lib and *throwning* exceptions\n\n")
+#pragma message("PPRINTPP *using* STD lib and *throwning* exceptions\n\n")
 #endif
 
 #include "stl_symbols.hpp"
@@ -38,7 +38,7 @@
 namespace jacek_galowicz {
 	namespace pprintpp {
 
-		constexpr auto VERSION = "0.1.0";
+		constexpr auto VERSION = "0.2.0";
 
 		template <typename T> struct always_false { static constexpr bool value{ false }; };
 
@@ -65,9 +65,10 @@ namespace jacek_galowicz {
 
 		template <> struct type2fmt<nullptr_t> { using type = char_tl_t<'p'>; };
 
+#ifdef PPRINTPP_STANDARD_CHAR_PTR
 		// DBJ -- this makes char * output into 'p' aka pointer output
-		// template <typename T> struct type2fmt<T*> { using type = char_tl_t<'p'>; };
-
+		template <typename T> struct type2fmt<T*> { using type = char_tl_t<'p'>; };
+#else
 		// DBJ -- BEGIN CHANGE
 		template<class T, T v>
 		struct my_integral_constant {
@@ -75,13 +76,10 @@ namespace jacek_galowicz {
 			typedef T value_type;
 			typedef my_integral_constant type; // using injected-class-name
 			constexpr operator value_type() const noexcept { return value; }
-			constexpr value_type operator()() const noexcept { return value; } 
+			constexpr value_type operator()() const noexcept { return value; }
 		};
-        
-		template< bool v_ >
-		struct s_or_p : my_integral_constant<bool, v_ > {} ;
 
-		template<> struct s_or_p<true> : my_integral_constant<bool, true >
+		template< bool v_ = true > struct s_or_p : my_integral_constant<bool, v_ >
 		{
 			using type = char_tl_t<'s'>;
 		};
@@ -91,10 +89,7 @@ namespace jacek_galowicz {
 			using type = char_tl_t<'p'>;
 		};
 
-		template <
-			typename T
-		> 
-		struct type2fmt<T*> 
+		template < typename T > struct type2fmt<T*>
 		{
 			using raw_T = remove_cv_t<T>;
 			static constexpr bool is_str{ is_same<char,
@@ -103,6 +98,7 @@ namespace jacek_galowicz {
 			using type = typename s_or_p<is_str>::type;
 		};
 		// DBJ -- END CHANGE
+#endif // PPRINTPP_STANDARD_CHAR_PTR
 
 		template <typename T, typename FL>
 		struct format_str {

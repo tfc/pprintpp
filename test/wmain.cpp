@@ -1,3 +1,5 @@
+#define PPRINTPP_AVOID_STL
+#define PPRINTPP_STANDARD_CHAR_PTR
 #include "../include/pprintpp/pprintpp.hpp"
 
 #include <cassert>
@@ -6,30 +8,39 @@
 #include <cstdio>
 #include <exception>
 
-extern "C" int test_1(int, wchar_t* []);
-extern "C" int test_2(int, wchar_t* []);
-extern "C" int test_3(int, wchar_t* []);
-/*
-WINDOWS branch is built using Visual Studio 2019, with both MSVC and CLANG compiler
-comig with it (8.0.1)
-*/
+extern "C" int test_1(int = 0, wchar_t* [] = nullptr );
+extern "C" int test_2(int = 0, wchar_t* [] = nullptr);
+#ifdef PPRINTPP_STANDARD_CHAR_PTR
+extern "C" int test_3(int = 0, wchar_t* [] = nullptr);
+#endif
+
+#define PPRINTPP_EXPERIMENTAL 1
+
+#if PPRINTPP_EXPERIMENTAL
+extern "C" int test_4(int = 0, wchar_t* [] = nullptr);
+#endif
+
 int wmain(int, wchar_t * [])
 {
+	printf("\nCompiled with: ");
 #ifdef __clang__
 	//__clang__             // set to 1 if compiler is clang
 	//	__clang_major__       // integer: major marketing version number of clang
 	//	__clang_minor__       // integer: minor marketing version number of clang
 	//	__clang_patchlevel__  // integer: marketing patch level of clang
 	//	__clang_version__     // string: full version number
-	printf( "\n\nCLANG: %s\n\n" , __clang_version__);
+	printf( "CLANG: %s\n" , __clang_version__);
 #else
-	printf("\n\n_MSVC_LANG: %lu\n\n", _MSVC_LANG);
+	printf("_MSVC_LANG: %lu\n", _MSVC_LANG);
 #endif
-	test_1(0, 0);
-	test_2(0, 0);
-	test_3(0, 0);
+	test_1();
+	test_2();
+	test_3();
+#if PPRINTPP_EXPERIMENTAL
+	test_4();
+#endif
 	printf("\nDone...\n");
-	return 42;
+	return EXIT_SUCCESS;
 }
 extern "C" int test_1(int, wchar_t* [])
 {
@@ -81,82 +92,83 @@ extern "C" int test_1(int, wchar_t* [])
 		"FP + width + max precision", 12.34567890123456789
 	);
 #endif // __clang__
-	return 42;
+	return EXIT_SUCCESS;
 }
 /*
 Example:
  auto compile_time_format_ =  AUTOFORMAT("{} {}", 123, 1.23f)
 // must return: "%d %f"
  */
-#define TEST(printf_format_correct_str, ...) \
+#define PPRINTPP_TEST(printf_format_correct_str, ...) \
     assert(!strcmp(AUTOFORMAT(__VA_ARGS__), printf_format_correct_str))
 
 extern "C" int test_2(int, wchar_t* [])
 {
-	TEST("", "");
+	PPRINTPP_TEST("", "");
 
-	TEST("%%", "%%");
-	TEST("%d %f", "{} %f", 123, 1.23f);
-	TEST("%f %d", "%f {}", 1.23f, 123);
+	PPRINTPP_TEST("%%", "%%");
+	PPRINTPP_TEST("%d %f", "{} %f", 123, 1.23f);
+	PPRINTPP_TEST("%f %d", "%f {}", 1.23f, 123);
 
-	TEST(" { ", " \\{ ");
-	TEST("{}", "\\{}");
-	TEST(" { %d } ", " \\{ {} } ", 123);
+	PPRINTPP_TEST(" { ", " \\{ ");
+	PPRINTPP_TEST("{}", "\\{}");
+	PPRINTPP_TEST(" { %d } ", " \\{ {} } ", 123);
 
-	TEST("%p", "{}", nullptr);
-	TEST("%p", "{}", reinterpret_cast<void*>(0));
+	PPRINTPP_TEST("%p", "{}", nullptr);
+	PPRINTPP_TEST("%p", "{}", reinterpret_cast<void*>(0));
 
-	// DBJ -- {s} is not required for string output
-	// JG to comment
-	// TEST("%p", "{}", "str");
-	// the two will both output the string
-	TEST("%s", "{}", "str");
-	TEST("%s", "{s}", "str");
 
-	TEST("%c", "{}", static_cast<char>(123));
+#ifdef PPRINTPP_STANDARD_CHAR_PTR
+	PPRINTPP_TEST("%p", "{}", "str");
+#else
+	PPRINTPP_TEST("%s", "{}", "str");
+#endif
 
-	TEST("%d", "{}", static_cast<short>(123));
-	TEST("%d", "{}", 123);
-	TEST("%ld", "{}", 123l);
-	TEST("%lld", "{}", 123ll);
+	PPRINTPP_TEST("%s", "{s}", "str");
 
-	TEST("%u", "{}", 123u);
-	TEST("%lu", "{}", 123ul);
-	TEST("%llu", "{}", 123ull);
+	PPRINTPP_TEST("%c", "{}", static_cast<char>(123));
 
-	TEST("%x", "{x}", 123u);
-	TEST("%lx", "{x}", 123ul);
-	TEST("%llx", "{x}", 123ull);
+	PPRINTPP_TEST("%d", "{}", static_cast<short>(123));
+	PPRINTPP_TEST("%d", "{}", 123);
+	PPRINTPP_TEST("%ld", "{}", 123l);
+	PPRINTPP_TEST("%lld", "{}", 123ll);
 
-	TEST("%d", "{}", true);
+	PPRINTPP_TEST("%u", "{}", 123u);
+	PPRINTPP_TEST("%lu", "{}", 123ul);
+	PPRINTPP_TEST("%llu", "{}", 123ull);
 
-	TEST("%f", "{}", 1.0f);
-	TEST("%lf", "{}", 1.0);
+	PPRINTPP_TEST("%x", "{x}", 123u);
+	PPRINTPP_TEST("%lx", "{x}", 123ul);
+	PPRINTPP_TEST("%llx", "{x}", 123ull);
 
-	TEST("%10d", "{10}", 123);
-	TEST("%10x", "{10x}", 123u);
-	TEST("%#10x", "{#10x}", 123u);
+	PPRINTPP_TEST("%d", "{}", true);
+
+	PPRINTPP_TEST("%f", "{}", 1.0f);
+	PPRINTPP_TEST("%lf", "{}", 1.0);
+
+	PPRINTPP_TEST("%10d", "{10}", 123);
+	PPRINTPP_TEST("%10x", "{10x}", 123u);
+	PPRINTPP_TEST("%#10x", "{#10x}", 123u);
 
 	// Give the user hex if asked for explicitly.
-	TEST("%x", "{x}", 123);
-	TEST("%lx", "{x}", 123l);
-	TEST("%llx", "{x}", 123ll);
+	PPRINTPP_TEST("%x", "{x}", 123);
+	PPRINTPP_TEST("%lx", "{x}", 123l);
+	PPRINTPP_TEST("%llx", "{x}", 123ll);
 
-	puts("Green, green, green! All tests passed.\n");
-
-	pprintf("{s} {} {1} {} {} {} {} {} {} {} {} {} {} {} {} {#x}\n",
-		"1", 2u, 3.0, 4.0f, 5ull, '6', 7ul, 8, 9, 10, 11, 12, 13, 14, 15, 16u);
+	pprintf( "\n\n[" __TIMESTAMP__ "] {s}",  "All basic tests have passed.");
 
 	return 0;
 }
+#undef PPRINTPP_TEST
 
+#ifdef PPRINTPP_STANDARD_CHAR_PTR
 extern "C" int test_3(int, wchar_t* [])
 {
 	std::exception x1("runtime      error");
 	std::exception x2("cosmological error");
 
 	// DBJ -- {s} is not required for string output
-	pprintf("\n\nException: { } \nException: { }\n", x1.what(), x2.what() );
+	pprintf("\nException: { } \nException: { }\n", x1.what(), x2.what() );
 
 	const char* slit = "STRING LITERAL";
 	pprintf("\nString literal without 's': { } ", slit );
@@ -164,3 +176,4 @@ extern "C" int test_3(int, wchar_t* [])
 	[[maybe_unused]] auto dumzy = true;
 	return EXIT_SUCCESS;
 }
+#endif // PPRINTPP_STANDARD_CHAR_PTR
