@@ -1,6 +1,4 @@
-#ifndef _INC_PPRINTPP_STL_SYMBOLS_
-#define _INC_PPRINTPP_STL_SYMBOLS_
-
+#pragma once
 /*
  * MIT License
  *
@@ -38,9 +36,7 @@
 #endif
 #include "typelist.hpp"
 
-namespace jacek_galowicz {
-	namespace pprintpp {
-
+namespace pprintpp {
 
 #ifndef PPRINTPP_AVOID_STL
 
@@ -106,7 +102,5 @@ namespace jacek_galowicz {
 
 #endif
 
-	}
-} // namespace jacek_galowicz 
+}
 
-#endif // _INC_PPRINTPP_STL_SYMBOLS_

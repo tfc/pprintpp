@@ -1,5 +1,4 @@
-#ifndef _INC_PPRINTPP_
-#define _INC_PPRINTPP_
+#pragma once
 
 /*
  * MIT License
@@ -28,17 +27,10 @@
 // DBJ -- to print 'char *' as a string is standard behaviour
 // #define PPRINTPP_STANDARD_CHAR_PTR 1
 
-#ifndef PPRINTPP_AVOID_STL
-#pragma message("PPRINTPP *using* STD lib and *throwning* exceptions\n\n")
-#endif
-
 #include "stl_symbols.hpp"
 #include "charlist.hpp"
 
-namespace jacek_galowicz {
 	namespace pprintpp {
-
-		constexpr auto VERSION = "0.2.0";
 
 		template <typename T> struct always_false { static constexpr bool value{ false }; };
 
@@ -225,7 +217,6 @@ namespace jacek_galowicz {
 
 #define AUTOFORMAT(FMT_, ...) \
     []() constexpr -> const char * { \
-        using namespace jacek_galowicz; \
         struct strprov { static constexpr const char * str() { return static_cast<const char*>(FMT_); } }; \
         using paramtypes = decltype(pprintpp::tie_types(__VA_ARGS__)); \
         using af = pprintpp::autoformat_t<strprov, paramtypes>; \
@@ -239,6 +230,4 @@ namespace jacek_galowicz {
 #endif
 
 	} // pprintpp
-} // namespace jacek_galowicz 
 
-#endif // !_INC_PPRINTPP_

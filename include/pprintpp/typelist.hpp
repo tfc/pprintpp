@@ -1,5 +1,4 @@
-#ifndef _INC_PPRINTPP_TYPELIST_
-#define _INC_PPRINTPP_TYPELIST_
+#pragma once
 /*
  * MIT License
  *
@@ -24,97 +23,92 @@
  * SOFTWARE.
  */
 
-namespace jacek_galowicz {
-	namespace typelist {
+namespace typelist {
 
-		struct null_t {
-			using head = null_t;
-			using tail = null_t;
-		};
+	struct null_t {
+		using head = null_t;
+		using tail = null_t;
+	};
 
-		template <class T, class U>
-		struct tl
-		{
-			using head = T;
-			using tail = U;
-		};
+	template <class T, class U>
+	struct tl
+	{
+		using head = T;
+		using tail = U;
+	};
 
-		template <class TList>
-		using head_t = typename TList::head;
+	template <class TList>
+	using head_t = typename TList::head;
 
-		template <class TList>
-		using tail_t = typename TList::tail;
-
-
-		template <class ... Ts> struct make;
-
-		template <class T, class ... REST>
-		struct make<T, REST...> { using type = tl<T, typename make<REST...>::type>; };
-
-		template <>
-		struct make<> { using type = null_t; };
-
-		template <class ... Ts>
-		using make_t = typename make<Ts...>::type;
+	template <class TList>
+	using tail_t = typename TList::tail;
 
 
-		template <class TList, class T>
-		struct append;
-		template <>
-		struct append<null_t, null_t> { using type = null_t; };
-		template <class T>
-		struct append<null_t, T> { using type = make_t<T>; };
-		template <class Head, class T>
-		struct append<null_t, tl<Head, T>> { using type = tl<Head, T>; };
-		template <class Head, class Tail, class T>
-		struct append<tl<Head, Tail>, T>
-		{
-			using type = tl<Head, typename append<Tail, T>::type>;
-		};
+	template <class ... Ts> struct make;
 
-		template <class TList, class T>
-		using append_t = typename append<TList, T>::type;
+	template <class T, class ... REST>
+	struct make<T, REST...> { using type = tl<T, typename make<REST...>::type>; };
 
-		template <class TList, class T>
-		struct contains;
+	template <>
+	struct make<> { using type = null_t; };
 
-		template <class T>
-		struct contains<null_t, T> { static constexpr bool value{ false }; };
-		template <class T, class L>
-		struct contains<tl<T, L>, T> { static constexpr bool value{ true }; };
-		template <class S, class T, class L>
-		struct contains<tl<S, L>, T> : contains<L, T> {};
+	template <class ... Ts>
+	using make_t = typename make<Ts...>::type;
 
 
-		template <class TList, class T>
-		struct remove;
+	template <class TList, class T>
+	struct append;
+	template <>
+	struct append<null_t, null_t> { using type = null_t; };
+	template <class T>
+	struct append<null_t, T> { using type = make_t<T>; };
+	template <class Head, class T>
+	struct append<null_t, tl<Head, T>> { using type = tl<Head, T>; };
+	template <class Head, class Tail, class T>
+	struct append<tl<Head, Tail>, T>
+	{
+		using type = tl<Head, typename append<Tail, T>::type>;
+	};
 
-		template <class T>
-		struct remove<null_t, T> { using type = null_t; };
-		template <class T, class L>
-		struct remove<tl<T, L>, T> { using type = typename remove<L, T>::type; };
-		template <class S, class T, class L>
-		struct remove<tl<S, L>, T> { using type = tl<S, typename remove<L, T>::type>; };
+	template <class TList, class T>
+	using append_t = typename append<TList, T>::type;
 
-		template <class TL, class T>
-		using remove_t = typename remove<TL, T>::type;
+	template <class TList, class T>
+	struct contains;
+
+	template <class T>
+	struct contains<null_t, T> { static constexpr bool value{ false }; };
+	template <class T, class L>
+	struct contains<tl<T, L>, T> { static constexpr bool value{ true }; };
+	template <class S, class T, class L>
+	struct contains<tl<S, L>, T> : contains<L, T> {};
 
 
-		template <class TList, class T, class TS>
-		struct substitute;
+	template <class TList, class T>
+	struct remove;
 
-		template <class T, class TS>
-		struct substitute<null_t, T, TS> { using type = null_t; };
-		template <class T, class L, class TS>
-		struct substitute<tl<T, L>, T, TS> { using type = tl<TS, typename substitute<L, T, TS>::type>; };
-		template <class S, class T, class L, class TS>
-		struct substitute<tl<S, L>, T, TS> { using type = tl<S, typename substitute<L, T, TS>::type>; };
+	template <class T>
+	struct remove<null_t, T> { using type = null_t; };
+	template <class T, class L>
+	struct remove<tl<T, L>, T> { using type = typename remove<L, T>::type; };
+	template <class S, class T, class L>
+	struct remove<tl<S, L>, T> { using type = tl<S, typename remove<L, T>::type>; };
 
-		template <class TL, class T, class TS>
-		using substitute_t = typename substitute<TL, T, TS>::type;
+	template <class TL, class T>
+	using remove_t = typename remove<TL, T>::type;
 
-	} // namespace tl
-}
 
-#endif // !_INC_PPRINTPP_TYPELIST_
+	template <class TList, class T, class TS>
+	struct substitute;
 
+	template <class T, class TS>
+	struct substitute<null_t, T, TS> { using type = null_t; };
+	template <class T, class L, class TS>
+	struct substitute<tl<T, L>, T, TS> { using type = tl<TS, typename substitute<L, T, TS>::type>; };
+	template <class S, class T, class L, class TS>
+	struct substitute<tl<S, L>, T, TS> { using type = tl<S, typename substitute<L, T, TS>::type>; };
+
+	template <class TL, class T, class TS>
+	using substitute_t = typename substitute<TL, T, TS>::type;
+
+} // namespace tl
