@@ -14,12 +14,6 @@ extern "C" int test_2(int = 0, wchar_t* [] = nullptr);
 extern "C" int test_3(int = 0, wchar_t* [] = nullptr);
 #endif
 
-#define PPRINTPP_EXPERIMENTAL 1
-
-#if PPRINTPP_EXPERIMENTAL
-extern "C" int test_4(int = 0, wchar_t* [] = nullptr);
-#endif
-
 int wmain(int, wchar_t * [])
 {
 	printf("\nCompiled with: ");
@@ -35,9 +29,8 @@ int wmain(int, wchar_t * [])
 #endif
 	test_1();
 	test_2();
+#ifdef PPRINTPP_STANDARD_CHAR_PTR
 	test_3();
-#if PPRINTPP_EXPERIMENTAL
-	test_4();
 #endif
 	printf("\nDone...\n");
 	return EXIT_SUCCESS;

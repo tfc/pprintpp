@@ -37,13 +37,6 @@ char const * message_ = "The Message";
     pprintf("{}", message_) ;
 #endif
 ```
-
-#### Experimental
-
-Currently the experimental subfolder contains `ppf_arg`. Schema that might be used to somewhat serve the users wanting to handle their user defined types.
-
-The purpose of the experimental stuff. is to be used for discussions. Will be eihter incorporated or erased.
-
 #### The roadmap
 
 1. testing [Fixed width integer types](https://en.cppreference.com/w/cpp/types/integer)

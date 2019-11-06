@@ -117,7 +117,6 @@
     <ClInclude Include="include\pprintpp\typelist.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="test\experimental\ppf_arg.cpp" />
     <ClCompile Include="test\wmain.cpp" />
   </ItemGroup>
   <ItemGroup>
