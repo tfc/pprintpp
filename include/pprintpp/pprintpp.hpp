@@ -24,8 +24,21 @@
  * SOFTWARE.
  */
 
-// DBJ -- to print 'char *' as a string is standard behaviour
-// #define PPRINTPP_STANDARD_CHAR_PTR 1
+/*
+GCC 5.5.0 is chocking on this one perhaps?
+
+auto csl = [] () constexpr -> bool { return true };
+*/
+#if defined ( _MSC_VER  ) ||  defined(__clang__)
+#define PPRINTPP_CONSTEXPR_LAMBDA constexpr
+#else
+#define PPRINTPP_CONSTEXPR_LAMBDA 
+#endif
+
+/*
+DBJ -- to print 'char *' as a string is standard behaviour
+#define PPRINTPP_STANDARD_CHAR_PTR 1
+*/
 
 #include "stl_symbols.hpp"
 #include "charlist.hpp"
@@ -61,7 +74,7 @@
 		// DBJ -- this makes char * output into 'p' aka pointer output
 		template <typename T> struct type2fmt<T*> { using type = char_tl_t<'p'>; };
 #else
-		// DBJ -- BEGIN CHANGE
+		/* DBJ -- BEGIN CHANGE */
 		template<class T, T v>
 		struct my_integral_constant {
 			static constexpr T value = v;
@@ -89,8 +102,8 @@
 
 			using type = typename s_or_p<is_str>::type;
 		};
-		// DBJ -- END CHANGE
-#endif // PPRINTPP_STANDARD_CHAR_PTR
+		/* DBJ -- END CHANGE */
+#endif /* PPRINTPP_STANDARD_CHAR_PTR */
 
 		template <typename T, typename FL>
 		struct format_str {
@@ -205,18 +218,19 @@
 		template <typename ... Ts>
 		make_t<Ts...> tie_types(Ts...);
 
-		//#define AUTOFORMAT(s, ...) \
-		//    ({ \
-		//        struct strprov { static constexpr const char * str() { return static_cast<const char*>(s); } }; \
-		//        using paramtypes = decltype(pprintpp::tie_types(__VA_ARGS__)); \
-		//        using af = pprintpp::autoformat_t<strprov, paramtypes>; \
-		//        af::str(); \
-		//    })
-
-		// DBJ -- replaced the above with bellow ... MSVC can work with this
+		/*
+		 #define AUTOFORMAT(s, ...) \
+		    ({ \
+		        struct strprov { static constexpr const char * str() { return static_cast<const char*>(s); } }; \
+		        using paramtypes = decltype(pprintpp::tie_types(__VA_ARGS__)); \
+		        using af = pprintpp::autoformat_t<strprov, paramtypes>; \
+		        af::str(); \
+		    })
+		*/
+		/* DBJ -- replaced the above with bellow ... MSVC can work with this */
 
 #define AUTOFORMAT(FMT_, ...) \
-    []() constexpr -> const char * { \
+    []() PPRINTPP_CONSTEXPR_LAMBDA -> const char * { \
         struct strprov { static constexpr const char * str() { return static_cast<const char*>(FMT_); } }; \
         using paramtypes = decltype(pprintpp::tie_types(__VA_ARGS__)); \
         using af = pprintpp::autoformat_t<strprov, paramtypes>; \

@@ -35,6 +35,7 @@ int wmain(int, wchar_t * [])
 	printf("\nDone...\n");
 	return EXIT_SUCCESS;
 }
+
 extern "C" int test_1(int, wchar_t* [])
 {
 	// DBJ  -- added 

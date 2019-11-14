@@ -86,10 +86,12 @@ namespace pprintpp {
 		struct tl_to_varlist<typelist::null_t, chars...> {
 			using list = char_tl<chars...>;
 
-			// DBJ -- maketh into constexpr
-			// DBJ -- instances of this template are 
-			//        unique types, thus type level
-			//        values are ok to use
+/*
+			 DBJ -- maketh into constexpr
+			 DBJ -- instances of this template are 
+			        unique types, thus type level
+			        values are ok to use
+*/
 			constexpr static const char string_[]{ chars..., '\0' };
 
 			static constexpr const char* str() {
