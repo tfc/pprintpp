@@ -9,9 +9,9 @@
 #include <exception>
 
 extern "C" int test_1(int = 0, wchar_t* [] = nullptr );
-extern "C" int test_2(int = 0, wchar_t* [] = nullptr);
+extern "C" int test_2(int = 0, wchar_t* [] = nullptr );
 #ifdef PPRINTPP_STANDARD_CHAR_PTR
-extern "C" int test_3(int = 0, wchar_t* [] = nullptr);
+extern "C" int test_3(int = 0, wchar_t* [] = nullptr );
 #endif
 
 int wmain(int, wchar_t * [])

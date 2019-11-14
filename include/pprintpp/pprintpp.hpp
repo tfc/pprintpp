@@ -24,12 +24,18 @@
  * SOFTWARE.
  */
 
-/*
-GCC 5.5.0 is chocking on this one perhaps?
+#if defined(_MSVC_LANG)
+#define _PPRINTPP_LANG _MSVC_LANG
+#else 
+#define _PPRINTPP_LANG __cplusplus
+#endif 
 
+/*
+constexpr lambda was made official not before C++17 
 auto csl = [] () constexpr -> bool { return true };
 */
-#if defined ( _MSC_VER  ) ||  defined(__clang__)
+
+#if _PPRINTPP_LANG > 201402L
 #define PPRINTPP_CONSTEXPR_LAMBDA constexpr
 #else
 #define PPRINTPP_CONSTEXPR_LAMBDA 
