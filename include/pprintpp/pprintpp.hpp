@@ -26,6 +26,8 @@
 #include "stl_symbols.hpp"
 #include "charlist.hpp"
 
+#include <cstdio>
+
 namespace pprintpp {
 
 template <typename T> struct always_false { static constexpr bool value {false}; };
