@@ -92,6 +92,7 @@ This output is from the file [`example/main.cpp`](example/main.cpp):
               --------------------- | ---------------------
                        String "abc" | {s}     -> "abc"
            String "abc" + min width | {10s}   -> "       abc"
+                  String "abcdefgh" | {.3s}   -> "abc"
                value 0x123, default | {}      -> "291"
                    value 0x123, hex | {x}     -> "123"
                       minimum width | {10}    -> "       291"
