@@ -1,10 +1,14 @@
-{
-  nixpkgs ? <nixpkgs>,
-  pkgs ? import nixpkgs {}
+{ nixpkgs ? <nixpkgs>
+, pkgs ? import nixpkgs { overlays = [ (import ./overlay.nix) ]; }
 }:
+let
+  inherit (import ./overlay.nix pkgs pkgs) pprintpp;
+in
+{
+  inherit pprintpp;
 
-pkgs.stdenv.mkDerivation {
-  name = "pprintpp";
-  src = ./.;
-  nativeBuildInputs = [ pkgs.cmake ];
+  compiled-with = pkgs.recurseIntoAttrs {
+    clang = pprintpp.override { stdenv = pkgs.clangStdenv; };
+    gcc = pprintpp.override { stdenv = pkgs.gccStdenv; };
+  };
 }
