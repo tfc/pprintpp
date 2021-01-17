@@ -111,7 +111,7 @@ This output is from the file [`example/main.cpp`](example/main.cpp):
 That means that it can be used with any `printf`-like function. You just need to define a macro, like for example, these ones for `printf` and `snprintf`:
 
 ``` c++
-#define pprintf(fmtstr, ...) printf(AUTOFORMAT(fmtstr, ## __VA_ARGS), ## __VA_ARGS__)
+#define pprintf(fmtstr, ...) printf(AUTOFORMAT(fmtstr, ## __VA_ARGS__), ## __VA_ARGS__)
 #define psnprintf(outbuf, len, fmtstr, ...) \
     snprintf(outbuf, len, AUTOFORMAT(fmtstr, ## __VA_ARGS__), ## __VA_ARGS__)
 ```
@@ -129,7 +129,7 @@ However, in some projects, C++ is used without streams.
 This library was designed to help out developers of such projects with some type safety and comfort.
 
 An older version of the library even contained code which rewrote the parts which come from the STL, so it doesn't even depend on the STL.
-These can be reimplemented, if someone wishes to use this on some hardcore baremetal project where no STL is available. 
+These can be reimplemented, if someone wishes to use this on some hardcore baremetal project where no STL is available.
 It's just that no one asked for that reimplementation, yet.
 
 ### I am pretty happy with `fmtlib`. Why `pprintpp`?
@@ -180,5 +180,5 @@ Baseline: If you are asking for actual *formatting features*, you will need to a
 
 ### Isn't that *no runtime overhead* feature just a result of compiler optimization?
 
-No. 
+No.
 The whole format string is preprocessed at compile time, this is guaranteed.
