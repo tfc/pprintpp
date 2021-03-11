@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.12)
+# Ubuntu 18.04 comes with Cmake 3.10, so let's keep it there for now.
+cmake_minimum_required(VERSION 3.10)
 project(pprintpp CXX)
 
 set(CMAKE_CXX_STANDARD 11)
