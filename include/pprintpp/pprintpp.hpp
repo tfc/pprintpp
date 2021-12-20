@@ -42,6 +42,7 @@ template <> struct type2fmt<short>               { using type = char_tl_t<'d'>; 
 template <> struct type2fmt<int>                 { using type = char_tl_t<'d'>; };
 template <> struct type2fmt<long int>            { using type = char_tl_t<'l', 'd'>; };
 template <> struct type2fmt<long long int>       { using type = char_tl_t<'l', 'l', 'd'>; };
+template <> struct type2fmt<signed char>         { using type = char_tl_t<'h', 'h', 'd'>; };
 template <> struct type2fmt<unsigned char>       { using type = char_tl_t<'u'>; };
 template <> struct type2fmt<unsigned short>      { using type = char_tl_t<'u'>; };
 template <> struct type2fmt<unsigned>            { using type = char_tl_t<'u'>; };
