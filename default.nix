@@ -1,8 +1,8 @@
-{ nixpkgs ? <nixpkgs>
-, pkgs ? import nixpkgs { overlays = [ (import ./overlay.nix) ]; }
-}:
 let
-  inherit (import ./overlay.nix pkgs pkgs) pprintpp;
+  sources = import ./nix/sources.nix;
+  pkgs = import sources.nixpkgs {};
+
+  pprintpp = pkgs.callPackage ./nix/build.nix {};
 in
 {
   inherit pprintpp;
