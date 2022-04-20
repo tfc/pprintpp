@@ -1,11 +1,10 @@
 cmake_minimum_required(VERSION 3.12)
 project(pprintpp CXX)
 
-set(CMAKE_CXX_STANDARD 11)
-
 add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME} INTERFACE
-  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_11)
@@ -16,10 +15,6 @@ add_executable(${PROJECT_NAME}-test test/main.cpp)
 add_test(NAME ${PROJECT_NAME}-test COMMAND ${PROJECT_NAME}-test)
 target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 target_compile_options(${PROJECT_NAME}-test PRIVATE -Wall -Wextra -Werror)
-
-add_executable(${PROJECT_NAME}-example example/main.cpp)
-target_link_libraries(${PROJECT_NAME}-example ${PROJECT_NAME})
-target_compile_options(${PROJECT_NAME}-example PRIVATE -Wall -Wextra -Werror)
 
 set(CPACK_PACKAGE_NAME "pprintpp")
 set(CPACK_PACKAGE_VENDOR "galowicz.de")

@@ -17,6 +17,12 @@
           gcc-build = self.packages.${system}.pprintpp.override {
             stdenv = pkgs.clangStdenv;
           };
+          example-standalone = pkgs.stdenv.mkDerivation {
+            name = "pprintpp-example-project";
+            src = ./example;
+            buildInputs = [ self.packages.${system}.pprintpp ];
+            nativeBuildInputs = [ pkgs.cmake ];
+          };
         };
         defaultPackage = self.packages.${system}.pprintpp;
       }
