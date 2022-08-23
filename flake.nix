@@ -10,6 +10,7 @@
       in
       {
         packages.pprintpp = pkgs.callPackage ./nix/build.nix { };
+        packages.default = self.packages.${system}.pprintpp;
         checks = {
           clang-build = self.packages.${system}.pprintpp.override {
             stdenv = pkgs.clangStdenv;
@@ -24,10 +25,9 @@
             nativeBuildInputs = [ pkgs.cmake ];
           };
         };
-        defaultPackage = self.packages.${system}.pprintpp;
       }
     )) // {
-      overlay = final: prev: {
+      overlays.default = final: prev: {
         pprintpp = final.callPackage ./nix/build.nix { };
       };
     };
