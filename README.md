@@ -2,6 +2,10 @@
 
 [![Build Status](https://travis-ci.org/tfc/pprintpp.svg?branch=master)](https://travis-ci.org/tfc/pprintpp) (GCC and Clang)
 
+**Maintenance status**: No active development is done here because the library
+is "complete". It is still actively used. If you happen to run into a bug, we'll
+get it sorted out.
+
 ## What is `pprintpp`?
 
 The acronym stands for "Python style print for C plus plus".
