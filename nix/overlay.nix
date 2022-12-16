@@ -1,3 +1,3 @@
 self: super: {
-  pprintpp = self.callPackage ./build.nix {};
+  pprintpp = self.callPackage ./build.nix { };
 }
