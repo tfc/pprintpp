@@ -34,6 +34,7 @@
             pre-commit-check = pre-commit-hooks.lib.${system}.run {
               src = ./.;
               hooks = {
+                clang-format.enable = true;
                 nixpkgs-fmt.enable = true;
                 statix.enable = true;
               };
