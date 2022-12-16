@@ -23,6 +23,7 @@
  */
 #pragma once
 
+#include "stl_symbols.hpp"
 #include "typelist.hpp"
 
 namespace charlist {
