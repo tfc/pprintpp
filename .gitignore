@@ -1,2 +1,4 @@
-/result
-/build
+.direnv/
+.pre-commit-config.yaml
+build
+result
