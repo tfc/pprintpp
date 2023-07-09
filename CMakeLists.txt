@@ -9,12 +9,20 @@ target_include_directories(${PROJECT_NAME} INTERFACE
   )
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_11)
 
-enable_testing()
+option(PPRINTPP_BUILD_TESTING "Enable building tests." OFF)
 
-add_executable(${PROJECT_NAME}-test test/main.cpp)
-add_test(NAME ${PROJECT_NAME}-test COMMAND ${PROJECT_NAME}-test)
-target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
-target_compile_options(${PROJECT_NAME}-test PRIVATE -Wall -Wextra -Werror)
+if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+  set(PPRINTPP_BUILD_TESTING ON)
+endif()
+
+if(PPRINTPP_BUILD_TESTING)
+  enable_testing()
+
+  add_executable(${PROJECT_NAME}-test test/main.cpp)
+  add_test(NAME ${PROJECT_NAME}-test COMMAND ${PROJECT_NAME}-test)
+  target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
+  target_compile_options(${PROJECT_NAME}-test PRIVATE -Wall -Wextra -Werror)
+endif()
 
 set(CPACK_PACKAGE_NAME "pprintpp")
 set(CPACK_PACKAGE_VENDOR "galowicz.de")
