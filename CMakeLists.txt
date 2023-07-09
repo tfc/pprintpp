@@ -11,6 +11,10 @@ target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_11)
 
 option(PPRINTPP_BUILD_TESTING "Enable building tests." OFF)
 
+if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+  set(PPRINTPP_BUILD_TESTING ON)
+endif()
+
 if(PPRINTPP_BUILD_TESTING)
   enable_testing()
 
