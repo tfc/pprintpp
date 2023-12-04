@@ -3,13 +3,16 @@
 stdenv.mkDerivation {
   name = "pprintpp";
 
-  src = lib.sourceByRegex ./. [
-    "^include.*"
-    "^test.*"
-    "^example.*"
-    "CMakeLists.txt"
-    "pkg-config.pc.cmake"
-  ];
+  src = lib.fileset.toSource {
+    root = ./.;
+    fileset = lib.fileset.unions [
+      ./include
+      ./test
+      ./example
+      ./CMakeLists.txt
+      ./pkg-config.pc.cmake
+    ];
+  };
 
   nativeBuildInputs = [ cmake ];
 
