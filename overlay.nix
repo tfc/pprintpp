@@ -1,3 +1,3 @@
-self: super: {
-  pprintpp = self.callPackage ./package.nix { };
+_: prev: {
+  pprintpp = prev.callPackage ./package.nix { };
 }

@@ -8,7 +8,7 @@
 
   outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } {
     systems = [ "x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin" ];
-    perSystem = { config, self', pkgs, system, ... }: {
+    perSystem = { config, pkgs, system, ... }: {
       _module.args.pkgs = import inputs.nixpkgs {
         inherit system;
         overlays = [ inputs.self.overlays.default ];
@@ -39,6 +39,7 @@
           src = ./.;
           hooks = {
             clang-format.enable = true;
+            deadnix.enable = true;
             nixpkgs-fmt.enable = true;
             statix.enable = true;
           };
