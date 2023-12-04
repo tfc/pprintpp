@@ -3,7 +3,7 @@
 stdenv.mkDerivation {
   name = "pprintpp";
 
-  src = lib.sourceByRegex ../. [
+  src = lib.sourceByRegex ./. [
     "^include.*"
     "^test.*"
     "^example.*"
