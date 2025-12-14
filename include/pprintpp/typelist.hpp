@@ -44,13 +44,19 @@ template <class... Ts> struct make;
 template <class T, class... REST> struct make<T, REST...> {
   using type = tl<T, typename make<REST...>::type>;
 };
-template <> struct make<> { using type = null_t; };
+template <> struct make<> {
+  using type = null_t;
+};
 
 template <class... Ts> using make_t = typename make<Ts...>::type;
 
 template <class TList, class T> struct append;
-template <> struct append<null_t, null_t> { using type = null_t; };
-template <class T> struct append<null_t, T> { using type = make_t<T>; };
+template <> struct append<null_t, null_t> {
+  using type = null_t;
+};
+template <class T> struct append<null_t, T> {
+  using type = make_t<T>;
+};
 template <class Head, class T> struct append<null_t, tl<Head, T>> {
   using type = tl<Head, T>;
 };
@@ -74,7 +80,9 @@ struct contains<tl<S, L>, T> : contains<L, T> {};
 
 template <class TList, class T> struct remove;
 
-template <class T> struct remove<null_t, T> { using type = null_t; };
+template <class T> struct remove<null_t, T> {
+  using type = null_t;
+};
 template <class T, class L> struct remove<tl<T, L>, T> {
   using type = typename remove<L, T>::type;
 };

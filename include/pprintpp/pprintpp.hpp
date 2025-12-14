@@ -39,19 +39,33 @@ using namespace charlist;
 
 template <typename T> struct type2fmt;
 
-template <> struct type2fmt<char> { using type = char_tl_t<'c'>; };
-template <> struct type2fmt<short> { using type = char_tl_t<'d'>; };
-template <> struct type2fmt<int> { using type = char_tl_t<'d'>; };
-template <> struct type2fmt<long int> { using type = char_tl_t<'l', 'd'>; };
+template <> struct type2fmt<char> {
+  using type = char_tl_t<'c'>;
+};
+template <> struct type2fmt<short> {
+  using type = char_tl_t<'d'>;
+};
+template <> struct type2fmt<int> {
+  using type = char_tl_t<'d'>;
+};
+template <> struct type2fmt<long int> {
+  using type = char_tl_t<'l', 'd'>;
+};
 template <> struct type2fmt<long long int> {
   using type = char_tl_t<'l', 'l', 'd'>;
 };
 template <> struct type2fmt<signed char> {
   using type = char_tl_t<'h', 'h', 'd'>;
 };
-template <> struct type2fmt<unsigned char> { using type = char_tl_t<'u'>; };
-template <> struct type2fmt<unsigned short> { using type = char_tl_t<'u'>; };
-template <> struct type2fmt<unsigned> { using type = char_tl_t<'u'>; };
+template <> struct type2fmt<unsigned char> {
+  using type = char_tl_t<'u'>;
+};
+template <> struct type2fmt<unsigned short> {
+  using type = char_tl_t<'u'>;
+};
+template <> struct type2fmt<unsigned> {
+  using type = char_tl_t<'u'>;
+};
 template <> struct type2fmt<unsigned long> {
   using type = char_tl_t<'l', 'u'>;
 };
@@ -59,13 +73,23 @@ template <> struct type2fmt<unsigned long long> {
   using type = char_tl_t<'l', 'l', 'u'>;
 };
 
-template <> struct type2fmt<bool> { using type = char_tl_t<'d'>; };
+template <> struct type2fmt<bool> {
+  using type = char_tl_t<'d'>;
+};
 
-template <> struct type2fmt<float> { using type = char_tl_t<'f'>; };
-template <> struct type2fmt<double> { using type = char_tl_t<'l', 'f'>; };
+template <> struct type2fmt<float> {
+  using type = char_tl_t<'f'>;
+};
+template <> struct type2fmt<double> {
+  using type = char_tl_t<'l', 'f'>;
+};
 
-template <> struct type2fmt<nullptr_t> { using type = char_tl_t<'p'>; };
-template <typename T> struct type2fmt<T *> { using type = char_tl_t<'p'>; };
+template <> struct type2fmt<nullptr_t> {
+  using type = char_tl_t<'p'>;
+};
+template <typename T> struct type2fmt<T *> {
+  using type = char_tl_t<'p'>;
+};
 
 template <typename T, typename FL> struct format_str {
   using raw_T = remove_cv_t<T>;
@@ -115,7 +139,9 @@ template <class OutList, size_t N> struct find_brace<null_t, OutList, N> {
 
 template <typename SL, typename TL> struct autoformat;
 
-template <> struct autoformat<null_t, null_t> { using type = null_t; };
+template <> struct autoformat<null_t, null_t> {
+  using type = null_t;
+};
 
 template <typename TL> struct autoformat<null_t, TL> {
   using type = null_t;

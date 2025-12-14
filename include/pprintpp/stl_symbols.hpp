@@ -55,11 +55,19 @@ template <typename T> using is_int_type = std::is_integral<T>;
 
 using nullptr_t = decltype(nullptr);
 
-template <typename T> struct remove_c { using type = T; };
-template <typename T> struct remove_c<const T> { using type = T; };
+template <typename T> struct remove_c {
+  using type = T;
+};
+template <typename T> struct remove_c<const T> {
+  using type = T;
+};
 
-template <typename T> struct remove_v { using type = T; };
-template <typename T> struct remove_v<volatile T> { using type = T; };
+template <typename T> struct remove_v {
+  using type = T;
+};
+template <typename T> struct remove_v<volatile T> {
+  using type = T;
+};
 
 template <typename T>
 using remove_cv_t = typename remove_v<typename remove_c<T>::type>::type;
@@ -80,9 +88,13 @@ template <typename A, typename B> struct conditional<false, A, B> {
   using type = B;
 };
 
-template <typename T> struct remove_ptr { using type = T; };
+template <typename T> struct remove_ptr {
+  using type = T;
+};
 
-template <typename T> struct remove_ptr<T *> { using type = T; };
+template <typename T> struct remove_ptr<T *> {
+  using type = T;
+};
 
 template <typename T> struct is_int_type {
   using ints =

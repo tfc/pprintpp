@@ -30,7 +30,9 @@ namespace charlist {
 
 using namespace typelist;
 
-template <char val> struct char_t { static const constexpr char value{val}; };
+template <char val> struct char_t {
+  static const constexpr char value{val};
+};
 
 template <char c, char... chars> struct char_tl;
 
