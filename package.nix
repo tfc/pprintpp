@@ -1,4 +1,8 @@
-{ cmake, stdenv, lib }:
+{
+  cmake,
+  stdenv,
+  lib,
+}:
 
 stdenv.mkDerivation {
   name = "pprintpp";
