@@ -41,6 +41,10 @@ int main() {
   TEST("%lx", "{x}", 123ul);
   TEST("%llx", "{x}", 123ull);
 
+  TEST("%X", "{X}", 123u);
+  TEST("%lX", "{X}", 123ul);
+  TEST("%llX", "{X}", 123ull);
+
   TEST("%d", "{}", true);
 
   TEST("%f", "{}", 1.0f);

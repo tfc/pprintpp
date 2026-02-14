@@ -99,13 +99,15 @@ template <typename T, typename FL> struct format_str {
 
   static constexpr bool is_int{is_int_type<raw_T>::value};
   static constexpr bool has_x{contains<FL, char_t<'x'>>::value};
+  static constexpr bool has_X{contains<FL, char_t<'X'>>::value};
+  static constexpr char x_char = has_X ? 'X' : 'x';
 
   using raw_fmt = typename type2fmt<T>::type;
 
   using uint_x_fmt = typename conditional<
-      is_int && has_x,
-      substitute_t<substitute_t<raw_fmt, char_t<'d'>, char_t<'x'>>, char_t<'u'>,
-                   char_t<'x'>>,
+      is_int && (has_x || has_X),
+      substitute_t<substitute_t<raw_fmt, char_t<'d'>, char_t<x_char>>,
+                   char_t<'u'>, char_t<x_char>>,
       raw_fmt>::type;
 
   using fmt_type =
@@ -113,7 +115,7 @@ template <typename T, typename FL> struct format_str {
                            substitute_t<raw_fmt, char_t<'p'>, char_t<'s'>>,
                            uint_x_fmt>::type;
 
-  using filtered_fl = remove_t<remove_t<FL, char_t<'x'>>, char_t<'s'>>;
+  using filtered_fl = remove_t<remove_t<FL, char_t<x_char>>, char_t<'s'>>;
 
   using type = append_t<filtered_fl, fmt_type>;
 };
