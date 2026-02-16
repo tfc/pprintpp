@@ -98,16 +98,30 @@ template <typename T, typename FL> struct format_str {
       is_same<char, remove_cv_t<typename remove_ptr<raw_T>::type>>::value};
 
   static constexpr bool is_int{is_int_type<raw_T>::value};
+
+  // this code block would ideally be shorter and like
+  // static constexpr optional<char> find_any_of(...)
   static constexpr bool has_x{contains<FL, char_t<'x'>>::value};
   static constexpr bool has_X{contains<FL, char_t<'X'>>::value};
   static constexpr char x_char = has_X ? 'X' : 'x';
+  static constexpr bool has_b{contains<FL, char_t<'b'>>::value};
+  static constexpr bool has_B{contains<FL, char_t<'B'>>::value};
+  static constexpr char b_char = has_B ? 'B' : 'b';
+  static constexpr bool has_o{contains<FL, char_t<'o'>>::value};
+  static constexpr bool has_O{contains<FL, char_t<'O'>>::value};
+  static constexpr char o_char = has_O ? 'O' : 'o';
+
+  static constexpr bool has_base_char{has_b || has_B || has_o || has_O ||
+                                      has_x || has_X};
+  static constexpr char base_char{
+      (has_x || has_X) ? x_char : ((has_o || has_O) ? o_char : b_char)};
 
   using raw_fmt = typename type2fmt<T>::type;
 
   using uint_x_fmt = typename conditional<
-      is_int && (has_x || has_X),
-      substitute_t<substitute_t<raw_fmt, char_t<'d'>, char_t<x_char>>,
-                   char_t<'u'>, char_t<x_char>>,
+      is_int && has_base_char,
+      substitute_t<substitute_t<raw_fmt, char_t<'d'>, char_t<base_char>>,
+                   char_t<'u'>, char_t<base_char>>,
       raw_fmt>::type;
 
   using fmt_type =
@@ -115,7 +129,7 @@ template <typename T, typename FL> struct format_str {
                            substitute_t<raw_fmt, char_t<'p'>, char_t<'s'>>,
                            uint_x_fmt>::type;
 
-  using filtered_fl = remove_t<remove_t<FL, char_t<x_char>>, char_t<'s'>>;
+  using filtered_fl = remove_t<remove_t<FL, char_t<base_char>>, char_t<'s'>>;
 
   using type = append_t<filtered_fl, fmt_type>;
 };
