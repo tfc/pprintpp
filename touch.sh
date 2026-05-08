@@ -1,6 +1,6 @@
 set -euo pipefail
 
-echo "" >> README.md
+echo "" >>README.md
 git add .
 git commit -m "lol"
 
